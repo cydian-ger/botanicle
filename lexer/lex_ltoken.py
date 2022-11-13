@@ -1,13 +1,12 @@
 from typing import List, Tuple, Any
 from lexer.LT import LT
 from lexer.lex_args import lex_args
-from lexer.lex_function import lex_function
-from lexer.static import VALID_RULE_LTOKENS, ARG_OPEN, FUNCTION_TOKEN
+from lexer.static import VALID_RULE_LTOKENS, ARG_OPEN
 
 
 def lex_ltoken(string: str, token_list: List[Tuple[LT, Any]]) -> int:
     index = 0  # Since we append string[0] already
-    arg = ""
+    # arg = ""
 
     while len(string) > index:
         c = string[index]

@@ -1,5 +1,4 @@
 from typing import List, Tuple, Any
-
 from lexer.LT import LT
 from lexer.lex_args import lex_args
 from lexer.lex_assignment import lex_assignment
@@ -31,11 +30,10 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
             # In this context the function is considered an LTOKEN
             if string[index] == ARG_OPEN:
-                token_list.append((LT.FUNCTION_ARGS, None))
-                index += lex_args(string[index:], token_list)
+                index += lex_args(string[index:], token_list,
+                                  arg_tokens=(LT.FUNCTION_ARGS, LT.FUNCTION, LT.FUNCTION_ARGS_END))
                 # Add 1 because you are breaking
                 index += 1
-                token_list.append((LT.FUNCTION_ARGS_END, None))
 
         elif c in CONTEXT_TOKENS:
             token_list.append((LT.CONTEXT_TOKEN, c))

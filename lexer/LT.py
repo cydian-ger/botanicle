@@ -26,6 +26,8 @@ class LT(Enum):
     CONTEXT_TOKEN = auto(),  # '<', '>'
 
     FUNCTION = auto(),
+
+    FUNCTION_ARG = auto(),
     FUNCTION_ARGS = auto(),
     FUNCTION_ARGS_END = auto(),
     # List

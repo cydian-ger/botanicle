@@ -1,6 +1,5 @@
 import re
 from typing import List, Tuple, Any
-
 from lexer.LT import LT
 from lexer.static import RESULT_TOKEN, LINE_BREAK
 
@@ -26,7 +25,3 @@ def lex_condition(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
     token_list.append((LT.CONDITION_END, None))
     return length
-
-
-if __name__ == '__main__':
-    pass
