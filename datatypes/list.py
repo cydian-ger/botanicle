@@ -1,4 +1,4 @@
-class List(list):
+class Value_List(list):
     _locked: bool = False
     _type: type = None
 

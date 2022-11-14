@@ -1,3 +1,2 @@
 class Value(float):
     pass
-

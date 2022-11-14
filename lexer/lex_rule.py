@@ -40,7 +40,6 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += 1
 
         elif c == CONDITION_TOKEN:
-            # index += 1  # Skip the CONDITION_TOKEN
             index += lex_condition(string[index:], token_list)
 
         elif c == RESULT_TOKEN:

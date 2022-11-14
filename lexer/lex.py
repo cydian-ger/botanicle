@@ -48,7 +48,7 @@ def lex(string: str):
 
 if __name__ == '__main__':
     test_string = """
-expose (x, y, z) as (a, b ,c)
+expose (x, y, z) as (a, b ,c) with ("a > b > c")
 include leaf.l as λ
 define z as 0.9
 group (A, B, C) as β
@@ -61,10 +61,9 @@ Z(z) < Y(y) > Z(zz)         : z == zz           → X(1)
 L(a)                        : (a == 1, b == 2)  → L(a + 1)
 $prev(a) < A(a)             :                   → $weighted($a1, 1)
 .a                                              → X(1)
-
 # This is a comment"""
 
-    # TODO - Turn Rule condition into a expr by using quotations (")
+    # TODO - Change lex condition to call args if parenthesis and use LT.CON_EXPR for the args inside
     # e.g. "b == a"
     tk = lex(test_string)
     pprint(token_compactor(tk))
@@ -72,7 +71,7 @@ $prev(a) < A(a)             :                   → $weighted($a1, 1)
     """
     New Proposal float-standardization:
     Every value, with a value being what is inside the actual numbers inside L-Token during production,
-    these values can only be a float. (or maybe a function)
+    these values can only be a float.
 
     New Proposal '$' / functions:
     $ this is now the function keyword.
@@ -87,12 +86,11 @@ $prev(a) < A(a)             :                   → $weighted($a1, 1)
 
     function idea list:
     $weighted(weight1: @linename1, ... weightN: @linename2): -> LToken
-    
+
     $seed (min: int, max: int) : -> value, takes the seed (that is between 0 and 1) and normalizes it to be between
      those two numbers.
 
-    $match(): -> LToken: this token can only be used in results and is substituted by the matched character.
-    
+
     $prev_LT / $next_LT (*arg_names): -> LToken. 
     $prev_LT(*arg_names): -> LToken: this can only be used inside of context or result.
     It takes the current cursor position and the symbol associated and matches and takes the shape of the previous match
@@ -101,13 +99,12 @@ $prev(a) < A(a)             :                   → $weighted($a1, 1)
     rule $prev_LT < 0 > $next_LT :-> 1
     only the 0 at index 3 would turn into a 1 
     
-    $cgroup((...): List of LToken, (...): List of arguments)
-
+    $m_group((...): List of LToken, (...): List of arguments)
+    e.g. $m_group((A, B, C),(x1, x2)) would match any A B or C with 2 arguments
 
     New Proposal 'Line alias':
     you can alias lines to reference them
-    with the reference syntax beginning with 1 greek letter followed by any characters except space,
-    space denotes the end of the name.
+    with the reference syntax beginning with a period followed by any string
     e.g.
     ω1: A < B > C:→ ABC
 

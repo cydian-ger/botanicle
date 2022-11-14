@@ -5,4 +5,3 @@ class Token(str):
 
         if len(self) > 1:
             raise SyntaxError("Token has to have the length of 1")
-
