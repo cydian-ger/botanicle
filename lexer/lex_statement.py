@@ -2,6 +2,7 @@ from lexer.LT import LT
 from typing import List, Tuple, Any
 
 from lexer.lex_args import lex_args
+from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
 from lexer.lex_linebreak import lex_linebreak
 from lexer.static import KEYWORDS, LINE_BREAK, ARG_OPEN, EXPR
@@ -36,8 +37,8 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         elif c == ARG_OPEN:
             # This means e.g. A(...) aka a symbol or many symbols in front of A arg group
             if len(expr) > 0:
-                raise SyntaxError(f"Arg open '{ARG_OPEN}' is not allowed to be preceded by anything but a space,"
-                                  f" expr = '{expr}'")
+                raise LexError(f"Arg open '{ARG_OPEN}' is not allowed to be preceded by anything but a space,"
+                               " expr = '{expr}'", string[index:], SyntaxError)
 
             index += lex_args(string[index:], token_list)
 

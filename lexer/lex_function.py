@@ -1,5 +1,6 @@
 from typing import List, Tuple, Any
 from lexer.LT import LT
+from lexer.lex_error import LexError
 from lexer.static import SPACE, LINE_BREAK, ARG_OPEN, FUNCTION_TOKEN, ARG_CLOSE, ARG_DELIMITER
 
 
@@ -16,11 +17,12 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             break
 
         elif c == LINE_BREAK:
-            raise SyntaxError  # Invalid character in token name
+            raise LexError(f"Invalid Character LINE_BREAK in name", string[index:], SyntaxError)
 
         elif c == FUNCTION_TOKEN:
             if index != 0:
-                raise SyntaxError  # Token can not appear inside the function name
+                raise LexError(f"Function token {FUNCTION_TOKEN} can not appear inside the function name",
+                               string[index:], SyntaxError)
 
         else:
             func += c

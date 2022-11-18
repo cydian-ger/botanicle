@@ -1,67 +1,98 @@
 from typing import List, Tuple, Any
 from lexer.LT import LT
+from lexer.lex_error import LexError
 from lexer.lex_statement import lex_statement
 from lexer.lex_comment import lex_comment
 from lexer.lex_linebreak import lex_linebreak
 from lexer.lex_rule import lex_rule
 from lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
 from pprint import pprint
-
 from lexer.token_compactor import token_compactor
+from colorama import Fore, Style
 
 
 def lex(string: str):
-    """
+    try:
+        # If any definition block has been opened and not yet closed its put here
+        token_list: List[Tuple[LT, Any]] = list()
 
-    """
-    # If any definition block has been opened and not yet closed its put here
-    token_list: List[Tuple[LT, Any]] = list()
+        index = 0
+        while index < len(string):
+            char = string[index]
+            # Skip new lines
+            if char == LINE_BREAK:
+                index += lex_linebreak(string[index:], token_list)
 
-    index = 0
-    while index < len(string):
-        char = string[index]
-        # Skip new lines
-        if char == LINE_BREAK:
-            index += lex_linebreak(string[index:], token_list)
+            elif char in VALID_STATEMENT_CHARACTERS:
+                token_list.append((LT.STATEMENT, None))
+                index += lex_statement(string[index:], token_list)
 
-        elif char in VALID_STATEMENT_CHARACTERS:
-            token_list.append((LT.STATEMENT, None))
-            index += lex_statement(string[index:], token_list)
+            elif char == "#":
+                index += lex_comment(string[index:], token_list)
 
-        elif char == "#":
-            index += lex_comment(string[index:], token_list)
+            # elif char in SPECIAL_AXIOMS:
+            #     raise NotImplementedError
+            # Concretely define special axiom behaviour
 
-        # elif char in SPECIAL_AXIOMS:
-        #     raise NotImplementedError
-        # Concretely define special axiom behaviour
+            elif char in VALID_RULE_START:
+                token_list.append((LT.RULE, None))
+                # Do the rule thing
+                index += lex_rule(string[index:], token_list)
 
-        elif char in VALID_RULE_START:
-            token_list.append((LT.RULE, None))
-            # Do the rule thing
-            index += lex_rule(string[index:], token_list)
+            else:
+                index += 1
 
-        else:
-            index += 1
+    except LexError as e:
+        # Cosmetic variables
+        fault_line_cushion = 2
+
+        # print(repr(e))
+        fault_index = len(string) - len(e.remaining_string)
+
+        # Store the char index of every line break
+        # If the linebreak index is greater than fault index we know its inbetween the lines
+        line_breaks: List[int] = [0]
+
+        for index, char in enumerate(string):
+            if char == LINE_BREAK:
+                line_breaks.append(index)
+
+            if line_breaks[-1] >= fault_index:
+                break
+
+        fault_line_index = len(line_breaks) - 2  # Minus two cause first break is set at 0
+
+        lines = string.split(LINE_BREAK)
+        for line in lines:
+            line += LINE_BREAK
+
+        pre_fault_line_char_total = sum(len(s) + 1 for s in lines[:fault_line_index])  # Add length lines
+        # because "\n" are stripped
+
+        fault_line = lines[fault_line_index]
+        in_line_index = fault_index - pre_fault_line_char_total
+
+        print(Fore.RED + f"Line {fault_line_index}: " + repr(e) + Style.RESET_ALL)
+
+        for index, line in enumerate(lines):
+            if index == fault_line_index:
+                print(Fore.RED + "─" * len(fault_line) + Style.RESET_ALL)
+                print(line)
+                print(Fore.RED + "_" * in_line_index + "↑" + "_"
+                      * (len(fault_line) - in_line_index - 1) + Style.RESET_ALL)
+            else:
+                if fault_line_cushion:
+                    if abs(index - fault_line_index) <= fault_line_cushion:
+                        print(line)
+
+        exit(1)
+        return
 
     return token_list
 
 
 if __name__ == '__main__':
-    test_string = """
-expose (x, y, z) as (a, b ,c) with ("a > b > c")
-include leaf.l as λ
-define z as 0.9
-group (A, B, C) as β
-group (β, C) as γ
-ignore (0, 1, 2, 3, 4)
-
-# →A(1, z)
-.test A(a, a2) < B(b)       : b == a            → A(1, 1)B(1 + b)
-Z(z) < Y(y) > Z(zz)         : z == zz           → X(1)
-L(a)                        : (a == 1, b == 2)  → L(a + 1)
-$prev(a) < A(a)             :                   → $weighted($a1, 1)
-.a                                              → X(1)
-# This is a comment"""
+    test_string = open("test/test.l", encoding="utf-8").read()
 
     # TODO - Change lex condition to call args if parenthesis and use LT.CON_EXPR for the args inside
     # e.g. "b == a"
@@ -90,7 +121,6 @@ $prev(a) < A(a)             :                   → $weighted($a1, 1)
     $seed (min: int, max: int) : -> value, takes the seed (that is between 0 and 1) and normalizes it to be between
      those two numbers.
 
-
     $prev_LT / $next_LT (*arg_names): -> LToken. 
     $prev_LT(*arg_names): -> LToken: this can only be used inside of context or result.
     It takes the current cursor position and the symbol associated and matches and takes the shape of the previous match
@@ -98,7 +128,7 @@ $prev(a) < A(a)             :                   → $weighted($a1, 1)
     start: 0AB0BA0
     rule $prev_LT < 0 > $next_LT :-> 1
     only the 0 at index 3 would turn into a 1 
-    
+
     $m_group((...): List of LToken, (...): List of arguments)
     e.g. $m_group((A, B, C),(x1, x2)) would match any A B or C with 2 arguments
 

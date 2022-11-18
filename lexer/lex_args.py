@@ -1,5 +1,7 @@
 from lexer.LT import LT
 from typing import List, Tuple, Any
+
+from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
 from lexer.lex_function import lex_function
 from lexer.static import ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN
@@ -19,8 +21,7 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any]],
 
         if c == LINE_BREAK:
             # Linebreak before the arg end
-            print(string, "\n", index, string[index:])
-            raise SyntaxError
+            raise LexError("Linebreak before the end of an arg", string[index:], SyntaxError)
 
         elif c == ARG_CLOSE or c == ARG_DELIMITER:
             arg = arg.strip(" ")

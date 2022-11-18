@@ -2,6 +2,7 @@ from typing import List, Tuple, Any
 from lexer.LT import LT
 from lexer.lex_args import lex_args
 from lexer.lex_assignment import lex_assignment
+from lexer.lex_error import LexError
 from lexer.lex_function import lex_function
 from lexer.lex_linebreak import lex_linebreak
 from lexer.lex_ltoken import lex_ltoken
@@ -21,7 +22,8 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
         elif c == ASSIGNMENT_TOKEN:
             if index > 0:
-                raise SyntaxError
+                raise LexError(f"Assignment operator '{ASSIGNMENT_TOKEN}' must be at the start of a line",
+                               string[index:], SyntaxError)
             else:
                 index += lex_assignment(string[index:], token_list)
 
@@ -56,6 +58,7 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += 1
 
         else:
-            raise SyntaxError(f"Character '{c}' is not valid token start or rule component.")
+            raise LexError("Character " + c + " is not valid token start or rule component.",
+                           string[index:], SyntaxError)
 
     return index
