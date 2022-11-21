@@ -13,6 +13,7 @@ CONDITION_TOKEN = ":"
 RESULT_TOKEN = "→"
 ASSIGNMENT_TOKEN = "."  # Assign a name to a rule
 FUNCTION_TOKEN = "$"
+REFERENCE_TOKEN = "@"
 
 BASE_AXIOMS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 CONTEXT_HINTS = "01234567889"
@@ -38,13 +39,20 @@ VALID_INSTANCE_LTOKENS = BASE_AXIOMS + PRODUCTION_RULES + SPECIAL_AXIOMS
 VALID_STATEMENT_CHARACTERS = "abcdefghijklmnopqrstuvwxy"
 
 
-KEYWORDS = {
-    'as',
-    'define',
-    'expose',
-    'group',
-    'include',
-    'ignore'
+class KW:
+    alias = 'as'
+    define = 'define'
+    expose = 'expose'
+    group = 'group'
+    include = 'include'
+    ignore = 'ignore'
+
+
+KEYWORDS = {var for key, var in vars(KW).items() if not key.startswith("__")}
+
+FRAME_KEYWORDS = {
+    KW.include,
+    KW.expose
 }
 
 _TOKEN_PRIORITY = [
@@ -54,5 +62,3 @@ _TOKEN_PRIORITY = [
 
 # Numbers the statements so statement 0 is now at key 0
 TOKEN_PRIORITY = {x[1]: x[0] for x in enumerate(_TOKEN_PRIORITY)}
-
-_UNUSED = "§$%&/=?~:;.,|_@"

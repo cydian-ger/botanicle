@@ -12,6 +12,8 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         c = string[index]
 
         if c == ARG_OPEN or c == SPACE or c == ARG_DELIMITER or c == ARG_CLOSE:
+            if func == "":
+                raise LexError(f"Function name must not be empty", string[index:], SyntaxError)
             token_list.append((LT.FUNCTION, func))
             # index -= 1
             break
@@ -21,7 +23,7 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
         elif c == FUNCTION_TOKEN:
             if index != 0:
-                raise LexError(f"Function token {FUNCTION_TOKEN} can not appear inside the function name",
+                raise LexError(f"Function token '{FUNCTION_TOKEN}' can not appear inside the function name",
                                string[index:], SyntaxError)
 
         else:

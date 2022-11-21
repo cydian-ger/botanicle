@@ -19,13 +19,14 @@ class LT(Enum):
     RULE = auto(),  # Symbols the start of a rule
 
     ASSIGNMENT = auto(),  # Used to give a rule a name so it can be referenced later
+    REFERENCE = auto(),  # @
 
     # LToken A
     LTOKEN = auto(),  # 'A', 'B'
 
     CONTEXT_TOKEN = auto(),  # '<', '>'
 
-    FUNCTION = auto(),
+    FUNCTION = auto(),  # $
 
     FUNCTION_ARG = auto(),
     FUNCTION_ARGS = auto(),

@@ -46,6 +46,9 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += lex_expr(string[index:], token_list)
 
         else:
+            if not c.isalpha() and not c.isdigit() and not c == ".":
+                raise LexError(f"Statement Keyword must be made up of only alphabetical characters and not '{c}'",
+                               string[index:], SyntaxError)
             expr += c
 
         index += 1

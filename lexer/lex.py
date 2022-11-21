@@ -78,13 +78,12 @@ def lex(string: str):
             if index == fault_line_index:
                 print(Fore.RED + "─" * len(fault_line) + Style.RESET_ALL)
                 print(line)
-                print(Fore.RED + "_" * in_line_index + "↑" + "_"
+                print(Fore.RED + "─" * in_line_index + "↑" + "─"
                       * (len(fault_line) - in_line_index - 1) + Style.RESET_ALL)
             else:
                 if fault_line_cushion:
                     if abs(index - fault_line_index) <= fault_line_cushion:
                         print(line)
-
         exit(1)
         return
 
@@ -92,13 +91,7 @@ def lex(string: str):
 
 
 if __name__ == '__main__':
-    test_string = open("test/test.l", encoding="utf-8").read()
-
-    # TODO - Change lex condition to call args if parenthesis and use LT.CON_EXPR for the args inside
-    # e.g. "b == a"
-    tk = lex(test_string)
-    pprint(token_compactor(tk))
-
+    exit(0)
     """
     New Proposal float-standardization:
     Every value, with a value being what is inside the actual numbers inside L-Token during production,
