@@ -27,6 +27,8 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
                                string[index:], SyntaxError)
 
         else:
+            if not c.isalnum():
+                raise LexError(f"The Character '{c}' is not allowed in a function name.", string[index:], SyntaxError)
             func += c
 
         index += 1

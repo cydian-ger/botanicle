@@ -6,6 +6,7 @@ ARG_OPEN = "("
 ARG_CLOSE = ")"
 ARG_DELIMITER = ","  # For A(1, b)
 SPACE = " "
+PATH_CHARS = "./"  # For paths and files
 
 # > (e.g. c_ignore)
 CONTEXT_TOKENS = "<>"
@@ -60,5 +61,5 @@ _TOKEN_PRIORITY = [
     LT.RULE
 ]
 
-# Numbers the statements so statement 0 is now at key 0
+# Numbers the statement so statement 0 is now at key 0
 TOKEN_PRIORITY = {x[1]: x[0] for x in enumerate(_TOKEN_PRIORITY)}

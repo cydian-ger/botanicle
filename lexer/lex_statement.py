@@ -5,7 +5,7 @@ from lexer.lex_args import lex_args
 from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
 from lexer.lex_linebreak import lex_linebreak
-from lexer.static import KEYWORDS, LINE_BREAK, ARG_OPEN, EXPR
+from lexer.static import KEYWORDS, LINE_BREAK, ARG_OPEN, EXPR, PATH_CHARS
 
 
 def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
@@ -24,6 +24,9 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
                 if expr[0].isdigit():
                     token_list.append((LT.VALUE, expr))
 
+                # If the expression contains path characters like "." and "/"
+                elif len([char for char in PATH_CHARS if expr.__contains__(char)]) > 0:
+                    token_list.append((LT.PATH, expr))
                 # If the first char is not a digit
                 else:
                     token_list.append((LT.NAME, expr))
@@ -38,7 +41,7 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             # This means e.g. A(...) aka a symbol or many symbols in front of A arg group
             if len(expr) > 0:
                 raise LexError(f"Arg open '{ARG_OPEN}' is not allowed to be preceded by anything but a space,"
-                               " expr = '{expr}'", string[index:], SyntaxError)
+                               , string[index - 1:], SyntaxError)
 
             index += lex_args(string[index:], token_list)
 
@@ -46,7 +49,7 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += lex_expr(string[index:], token_list)
 
         else:
-            if not c.isalpha() and not c.isdigit() and not c == ".":
+            if not c.isalpha() and not c.isdigit() and c not in PATH_CHARS:
                 raise LexError(f"Statement Keyword must be made up of only alphabetical characters and not '{c}'",
                                string[index:], SyntaxError)
             expr += c

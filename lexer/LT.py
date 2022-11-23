@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 
 class LT(Enum):
+
     def __repr__(self):
         return str(self)
 
@@ -20,6 +21,7 @@ class LT(Enum):
 
     ASSIGNMENT = auto(),  # Used to give a rule a name so it can be referenced later
     REFERENCE = auto(),  # @
+    PATH = auto(),
 
     # LToken A
     LTOKEN = auto(),  # 'A', 'B'
@@ -55,6 +57,8 @@ class LT(Enum):
     NAME = auto(),
 
     VALUE = auto(),
+
+    INFO = auto(),  # Info holds a dictionary of information on the thing its a part of
 
 
 # Given an open start block, gives the ending block for said block

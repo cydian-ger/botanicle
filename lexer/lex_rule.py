@@ -58,7 +58,7 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += 1
 
         else:
-            raise LexError("Character " + c + " is not valid token start or rule component.",
+            raise LexError(f"Character '{c}' is not a valid LToken / rule component.",
                            string[index:], SyntaxError)
 
     return index

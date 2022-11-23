@@ -1,23 +1,20 @@
 import sys
-import inspect
-from pprint import pprint
+from common.LError import LError
 
 
-class LexError(BaseException):
+class LexError(LError):
     def __init__(self, message: str, string: str, exception=SyntaxError):
-        self.message = message
-        self.exception = exception
         self.remaining_string = string
-        self.caller = inspect.getouterframes(inspect.currentframe(), 2)[1]
+        super().__init__(message=message, exception=exception)
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
-        error_msg = f'{self.exception.__name__}("{self.message}")'
+        # error_msg = f'{self.exception.__name__}("{self.message}")'
+        error_msg = f'<{self.exception.__name__}>. {self.message}'
 
-        gettrace = getattr(sys, 'gettrace', None)
-        if gettrace() is not None or sys.argv.__contains__("-debug"):
-            return f"{error_msg}\n-debug <origin>: {self.caller[3]}: {self.caller[2]}"
+        if sys.argv.__contains__("-debug"):
+            return f"{error_msg}\n-debug <error_origin> {self.caller[3]}: {self.caller[2]}"
 
         return error_msg
