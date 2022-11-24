@@ -1,14 +1,20 @@
 from compiler.l_compiler import l_compile
 from lexer.lex import lex
+from lexer.static import ARGV_DEBUG, ARGV_WARNING
 from lexer.token_compactor import token_compactor
 import sys
 
+
 if __name__ == '__main__':
-    sys.argv.append("-debug")
+    # from pprint import pprint
+    sys.argv += [ARGV_WARNING, ARGV_DEBUG]
     test_string = open("test/test.l", encoding="utf-8").read()
 
-    # e.g. "b == a"
-    # ERROR may be because the error is on the first character of the line,
+    # Lex the file
     tk = lex(test_string)
-    # pprint(token_compactor(tk))
-    l_compile(token_compactor(tk))
+
+    # Compact tokens
+    _compacted_tokens = token_compactor(tk)
+
+    # pprint(_compacted_tokens)
+    l_compile(_compacted_tokens)

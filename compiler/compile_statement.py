@@ -2,9 +2,10 @@ from typing import List, Tuple, Any, Optional, Dict
 from compiler.bottle import Bottle
 from compiler.compile_error import Compile_Error
 from compiler.statement.define import define
+from compiler.statement.ignore import ignore
+from compiler.statement.group import group
 from lexer.LT import LT
 from lexer.static import KW
-from colorama import Fore, Style
 
 
 def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
@@ -21,6 +22,12 @@ def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         match statement:
             case KW.define:
                 define(token_list, bottle)
+
+            case KW.group:
+                group(token_list, bottle)
+
+            case KW.ignore:
+                ignore(token_list, bottle)
 
     except Exception as e:
         raise Compile_Error(e.args[0], info, e)

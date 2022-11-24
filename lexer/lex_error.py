@@ -1,5 +1,6 @@
 import sys
 from common.LError import LError
+from lexer.static import ARGV_DEBUG
 
 
 class LexError(LError):
@@ -14,7 +15,7 @@ class LexError(LError):
         # error_msg = f'{self.exception.__name__}("{self.message}")'
         error_msg = f'<{self.exception.__name__}>. {self.message}'
 
-        if sys.argv.__contains__("-debug"):
-            return f"{error_msg}\n-debug <error_origin> {self.caller[3]}: {self.caller[2]}"
+        if sys.argv.__contains__(ARGV_DEBUG):
+            return f"{error_msg}\n-debug <error_origin> {self.caller_line}: {self.caller_name}"
 
         return error_msg

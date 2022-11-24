@@ -5,7 +5,8 @@ from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
 from lexer.lex_function import lex_function
 from lexer.lex_reference import lex_reference
-from lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN
+from lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
+    EMPTY_ARGUMENT
 
 
 def arg_strip(string: str) -> str:
@@ -34,10 +35,15 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any]],
 
         elif c == ARG_CLOSE or c == ARG_DELIMITER:
             arg = arg.strip(" ")
+
             if arg != "":
-                # Put the argument
-                token_list.append((arg_tokens[1], arg))
-                arg = ""
+                if arg == EMPTY_ARGUMENT:
+                    token_list.append((arg_tokens[1], ""))
+
+                else:
+                    # Put the argument
+                    token_list.append((arg_tokens[1], arg))
+                    arg = ""
 
             if c == ARG_CLOSE:
                 # Put the end argument name
