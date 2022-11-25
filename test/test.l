@@ -1,4 +1,4 @@
-expose (x, y, z) as (a, b ,c) with ("a > b > c")
+expose (a, b ,c) with ("a > b > c")
 include ./leaf.l as λ
 define z as 0.9
 group β as (A, B, C)

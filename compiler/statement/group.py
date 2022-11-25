@@ -1,10 +1,9 @@
 import sys
-from typing import List, Tuple, Any
-
-from common.LWarning import LWarning
-from compiler.bottle import Bottle
-from datatypes import Value_List, Token
 from lexer.LT import LT
+from compiler.bottle import Bottle
+from typing import List, Tuple, Any
+from common.LWarning import LWarning
+from datatypes import Value_List, Token
 from lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
 
 
@@ -13,8 +12,8 @@ def append(ltk, group_values, name):
         group_values.append(ltk)
     else:
         if sys.argv.__contains__(ARGV_WARNING):
-            print(repr(LWarning(f"Argument '{ltk}'"
-                                f" is included multiple times in '{name}: ({', '.join(group_values)})'")))
+            LWarning(f"Argument '{ltk}'"
+                     f" is included multiple times in '{name}: ({', '.join(group_values)})'").throw()
 
 
 def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
@@ -25,10 +24,10 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         raise SyntaxError(f"Ignore takes 3 Argument. {len(token_list)} were provided")
 
     if not token_list[0][0] == LT.NAME:
-        raise ValueError("First argument of define has to be a variable name.")
+        raise ValueError("First argument has to be a variable name.")
 
     if not token_list[1][0] == LT.KEYWORD and token_list[1][1] == KW.alias:
-        raise SyntaxError(f"Second argument of define has to be {KW.alias}")
+        raise SyntaxError(f"Second argument has to be {KW.alias}")
 
     if not token_list[2][0] == LT.ARGS:
         raise ValueError(f"Third argument has to be an argument list.")
@@ -66,7 +65,9 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     if sys.argv.__contains__(ARGV_WARNING):
         for name, values in bottle.groups.items():
             if values == group_values:
-                print(repr(LWarning(f"Group '{group_name}: ({', '.join(group_values)})' is already in the bottle: "
-                                    f"''{name}: ({', '.join(values)})''")))
+                LWarning(f"Group '{group_name}: ({', '.join(group_values)})' is already in the bottle: "
+                         f"''{name}: ({', '.join(values)})''").throw()
 
     bottle.groups[group_name] = group_values
+
+    return

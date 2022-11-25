@@ -12,7 +12,7 @@ def ignore(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         raise SyntaxError(f"Ignore takes 1 Argument. {len(token_list)} were provided")
 
     if not token_list[0][0] == LT.ARGS:
-        raise ValueError("First argument of define has to be a list of tokens.")
+        raise ValueError("First argument has to be a list of tokens.")
 
     ignore_list = Value_List()
     ignore_list.set_type(Token)
@@ -26,3 +26,5 @@ def ignore(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     # pass
     for value in ignore_list:
         bottle.context_ignore.add(value)
+
+    return

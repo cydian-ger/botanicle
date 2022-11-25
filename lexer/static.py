@@ -48,6 +48,7 @@ class KW:
     group = 'group'
     include = 'include'
     ignore = 'ignore'
+    lwith = 'with'  # Called lwith cause with is a keyword in python
 
 
 KEYWORDS = {var for key, var in vars(KW).items() if not key.startswith("__")}

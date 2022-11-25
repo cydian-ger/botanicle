@@ -13,13 +13,13 @@ def define(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         raise SyntaxError(f"Ignore takes 3 Argument. {len(token_list)} were provided")
 
     if not token_list[0][0] == LT.NAME:
-        raise ValueError("First argument of define has to be a variable name.")
+        raise ValueError("First argument has to be a variable name.")
 
     if not token_list[1][0] == LT.KEYWORD and token_list[1][1] == KW.alias:
-        raise SyntaxError(f"Second argument of define has to be {KW.alias}")
+        raise SyntaxError(f"Second argument has to be {KW.alias}")
 
     if not token_list[2][0] == LT.VALUE:
-        raise ValueError(f"Third argument of define has to be a numeric value")
+        raise ValueError(f"Third argument has to be a numeric value")
 
     # Form is asserted as correct now
     variable_name = token_list[0][1]

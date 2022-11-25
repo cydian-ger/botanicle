@@ -30,3 +30,6 @@ class LWarning:
             warning_msg = f"{warning_msg}\n-debug <error_origin> ({self.caller_name}: {self.caller_line})"
 
         return f"{Fore.RED}{warning_msg}{Style.RESET_ALL}"
+
+    def throw(self):
+        print(self)
