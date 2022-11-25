@@ -39,7 +39,7 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     group_name = Token(token_list[0][1])
 
     # Check if already in group names
-    if group_name in bottle.groups:
+    if bottle.token_already_exists(group_name):
         raise KeyError(f"Group '{group_name}' is already defined.")
 
     group_values = Value_List()

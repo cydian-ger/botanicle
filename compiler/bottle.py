@@ -1,17 +1,22 @@
 from typing import Dict, Set, Optional
 from datatypes import *
+from dataclasses import dataclass
 
 
+@dataclass
 class Frame:
     # The frame contains all external information, like expose and include
-    exposed_variable: Optional[Value_List[Token]]
+    exposed_variables: Optional[Value_List[Token]]
     exposing_conditions: Optional[Value_List[int]]
+    linked_files: Dict[Token, Name]
 
     def __init__(self):
         self.exposed_variables = None
         self.exposing_conditions = None
+        self.linked_files = dict()
 
 
+@dataclass
 class Bottle:
     variables: Dict[Name, Value]
     groups: Dict[Token, Value_List[Token]]
@@ -30,7 +35,11 @@ class Bottle:
 
         self.variables[variable_name] = variable_value
 
-    def __repr__(self):
-        return f"variables: {self.variables}" \
-               f"\ngroups: {self.groups}" \
-               f"\ncontext_ignore: {self.context_ignore}"
+    def token_already_exists(self, ltoken: Token):
+        if ltoken in self.groups.keys():
+            return True
+
+        if ltoken in self.frame.linked_files.keys():
+            return True
+
+        return False

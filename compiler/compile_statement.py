@@ -7,6 +7,7 @@ from compiler.statement.define import define
 from compiler.statement.expose import expose
 from compiler.statement.ignore import ignore
 from compiler.statement.group import group
+from compiler.statement.include import include
 from lexer.LT import LT
 from lexer.static import KW
 
@@ -35,6 +36,9 @@ def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
             case KW.expose:
                 expose(token_list, bottle)
 
+            case KW.include:
+                include(token_list, bottle)
+
             case _:
                 LWarning(f"Keyword '{statement}' not implemented yet.").throw()
 
@@ -42,6 +46,8 @@ def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         raise e
 
     except Exception as e:
-        raise Compile_Error(e.args[0], info, e)
+        if len(e.args) > 0:
+            raise Compile_Error(e.args[0], info, e)
+        else:
+            raise Compile_Error("ERROR MSG MISSING", info, e)
     # Put info here
-
