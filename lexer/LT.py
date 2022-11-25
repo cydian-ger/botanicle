@@ -25,6 +25,7 @@ class LT(Enum):
 
     # LToken A
     LTOKEN = auto(),  # 'A', 'B'
+    LTOKEN_END = auto(),
 
     CONTEXT_TOKEN = auto(),  # '<', '>'
 
@@ -65,6 +66,7 @@ class LT(Enum):
 LT_CLOSE = {
     LT.STATEMENT: LT.NEW_LINE,
 
+    LT.LTOKEN: LT.LTOKEN_END,
     LT.ARGS: LT.ARGS_END,
     LT.FUNCTION_ARGS: LT.FUNCTION_ARGS_END,
 

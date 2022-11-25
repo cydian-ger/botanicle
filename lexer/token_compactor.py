@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any, Optional
+from typing import List, Tuple, Any, Optional, Set
 
 from lexer.LT import LT, LT_CLOSE
 from lexer.static import TOKEN_PRIORITY

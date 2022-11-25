@@ -1,7 +1,7 @@
 from typing import List, Tuple, Any
 from lexer.LT import LT
 from lexer.lex_error import LexError
-from lexer.static import SPACE, ASSIGNMENT_TOKEN
+from lexer.static import SPACE, ASSIGNMENT_TOKEN, LINE_BREAK
 
 
 def lex_assignment(string: str, token_list: List[Tuple[LT, Any]]) -> int:
@@ -21,7 +21,10 @@ def lex_assignment(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         elif c == SPACE:
             break
 
-        elif not c.isalpha():  # " "
+        elif c == LINE_BREAK:
+            raise LexError(f"Assignment can not be followed by a line break.", string[index:], SyntaxError)
+
+        elif not c.isalnum():  # " "
             raise LexError(f"Invalid Assignment token character '{c}'", string[index:], SyntaxError)
 
         else:

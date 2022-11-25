@@ -22,8 +22,10 @@ class Bottle:
     groups: Dict[Token, Value_List[Token]]
     context_ignore: Set[Token]
     frame: Frame
+    rule_assignments: Set[Name]
 
     def __init__(self):
+        self.rule_assignments = set()
         self.context_ignore = set()
         self.variables = dict()
         self.groups = dict()

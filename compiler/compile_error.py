@@ -11,10 +11,17 @@ class Compile_Error(LError):
             super().__init__(message, exception)
         else:
             # Exception is an instance
-            super().__init__(message, exception=type(exception),
-                             caller=(
-                                 str(exception.__traceback__.tb_next.tb_frame.f_code.co_name),
-                                 str(exception.__traceback__.tb_next.tb_frame.f_lineno)
-                             )
-                             )
+            if exception.__traceback__.tb_next is not None:
+                super().__init__(message, exception=type(exception),
+                                 caller=(
+                                     str(exception.__traceback__.tb_next.tb_frame.f_code.co_name),
+                                     str(exception.__traceback__.tb_next.tb_frame.f_lineno)
+                                 )
+                                 )
+            else:
+                super().__init__(message, exception=type(exception),
+                                 caller=(
+                                     str(exception.__traceback__.tb_frame.f_code.co_name),
+                                     str(exception.__traceback__.tb_frame.f_lineno)
+                                 ))
         #

@@ -2,6 +2,7 @@ from typing import List, Tuple, Any
 
 from compiler.bottle import Bottle
 from compiler.compile_error import Compile_Error
+from compiler.compile_rule import compile_rule
 from compiler.compile_statement import compile_statement
 from lexer.LT import LT
 from colorama import Fore, Style
@@ -21,7 +22,7 @@ def l_compile(token_list: List[Tuple[LT, Any]]):
                     compile_statement(content, bottle)
 
                 case LT.RULE:
-                    pass
+                    compile_rule(content, bottle)
 
                 case LT.COMMENT:
                     # Comments are skipped for now

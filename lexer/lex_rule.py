@@ -13,6 +13,8 @@ from lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RE
 
 def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
     index = 0
+    result_token: bool = False
+    condition_token: bool = False
 
     while index < len(string):
         c = string[index]
@@ -42,15 +44,26 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             index += 1
 
         elif c == CONDITION_TOKEN:
+            if condition_token:
+                raise LexError("Condition token can not appear more than once in a rule", string[index:], SyntaxError)
+            condition_token = True
+
             index += lex_condition(string[index:], token_list)
 
         elif c == RESULT_TOKEN:
+            if result_token:
+                raise LexError("Result token can not appear more than once in a rule.", string[index:], SyntaxError)
+            result_token = True
+
             token_list.append((LT.RESULT, None))
             index += 1
 
         elif c == LINE_BREAK:
             index += 1
-            token_list.append((LT.RESULT_END, None))
+
+            if result_token:
+                token_list.append((LT.RESULT_END, None))
+
             index += lex_linebreak(string[index:], token_list)
             break
 

@@ -2,7 +2,8 @@ import re
 from typing import List, Tuple, Any
 from lexer.LT import LT
 from lexer.lex_args import lex_args
-from lexer.static import RESULT_TOKEN, LINE_BREAK, ARG_OPEN
+from lexer.lex_error import LexError
+from lexer.static import RESULT_TOKEN, LINE_BREAK, ARG_OPEN, CONDITION_TOKEN
 
 
 def lex_condition(string: str, token_list: List[Tuple[LT, Any]]) -> int:
@@ -17,6 +18,9 @@ def lex_condition(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
         if c == RESULT_TOKEN or c == LINE_BREAK:
             break
+
+        elif c == CONDITION_TOKEN and index != 0:
+            raise LexError("Condition token can not appear more than once in a rule", string[index:], SyntaxError)
 
         # Only allow list open if '(' appears and if the string is empty
         # e.g. don't allow 1*(a+b)

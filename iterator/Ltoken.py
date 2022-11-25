@@ -1,14 +1,15 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import List
-
 
 # Actual used thing. A(1)
 # Has to be associated to a rule
+from datatypes import Name, Value_List
+
+
 @dataclass(frozen=True, slots=True)
 class LToken:
-    name: str
-    values: List[int]
+    name: Name
+    values: Value_List[Name]
 
     @property
     def var_len(self):
