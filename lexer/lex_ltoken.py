@@ -11,16 +11,10 @@ def lex_ltoken(string: str, token_list: List[Tuple[LT, Any]]) -> int:
     while len(string) > index:
         c = string[index]
 
-        if c in VALID_RULE_LTOKENS:
+        if c in VALID_RULE_LTOKENS and index == 0:
             # If this is the first character add it as the token
-            if index == 0:
-                token_list.append((LT.LTOKEN, None))
-                token_list.append((LT.NAME, c))
-            else:
-                # If the rule is A and not A()
-                token_list.append((LT.ARGS, None))
-                token_list.append((LT.ARGS_END, None))
-                break
+            token_list.append((LT.LTOKEN, None))
+            token_list.append((LT.NAME, c))
 
         elif c == ARG_OPEN:
             index += lex_args(string[index:], token_list)
@@ -30,6 +24,8 @@ def lex_ltoken(string: str, token_list: List[Tuple[LT, Any]]) -> int:
             break
 
         else:
+            token_list.append((LT.ARGS, None))
+            token_list.append((LT.ARGS_END, None))
             # If the token is not A or A(...) then return after the first thing
             break
 

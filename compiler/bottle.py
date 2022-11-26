@@ -1,6 +1,8 @@
-from typing import Dict, Set, Optional
+from typing import Dict, Set, Optional, List
 from datatypes import *
 from dataclasses import dataclass
+
+from iterator.rule import Rule
 
 
 @dataclass
@@ -23,8 +25,10 @@ class Bottle:
     context_ignore: Set[Token]
     frame: Frame
     rule_assignments: Set[Name]
+    rule_list: List[Rule]
 
     def __init__(self):
+        self.rule_list = list()
         self.rule_assignments = set()
         self.context_ignore = set()
         self.variables = dict()

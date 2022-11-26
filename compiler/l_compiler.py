@@ -6,7 +6,6 @@ from compiler.compile_rule import compile_rule
 from compiler.compile_statement import compile_statement
 from lexer.LT import LT
 from colorama import Fore, Style
-from pprint import pprint
 
 
 # This compiles a single file
@@ -35,4 +34,4 @@ def l_compile(token_list: List[Tuple[LT, Any]]):
               f"\n '{e.info['line_text']}'")
         exit(1)
 
-    pprint(bottle)
+    return bottle

@@ -10,7 +10,9 @@ PATH_CHARS = "./"  # For paths and files
 EMPTY_ARGUMENT = "_"
 
 # > (e.g. c_ignore)
-CONTEXT_TOKENS = "<>"
+CONTEXT_LEFT = "<"
+CONTEXT_RIGHT = ">"
+CONTEXT_TOKENS = CONTEXT_LEFT + CONTEXT_RIGHT
 CONDITION_TOKEN = ":"
 RESULT_TOKEN = "→"
 ASSIGNMENT_TOKEN = "."  # Assign a name to a rule

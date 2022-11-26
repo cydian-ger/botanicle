@@ -4,6 +4,7 @@ from dataclasses import dataclass
 # Actual used thing. A(1)
 # Has to be associated to a rule
 from datatypes import Name, Value_List
+from lexer.static import ARG_OPEN, ARG_CLOSE
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,3 +24,10 @@ class LToken:
 
     def __ne__(self, other: LToken) -> bool:
         return not self == other
+
+    def __repr__(self):
+        # no vars
+        if len(self.values) == 0:
+            return f"{self.name}"
+        else:
+            return f"{self.name}{ARG_OPEN}{', '.join([str(val) for val in self.values])}{ARG_CLOSE}"
