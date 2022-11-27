@@ -51,7 +51,7 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any]],
                 break
 
         elif c == EXPR:
-            index += lex_expr(string[index:], token_list)
+            index += lex_expr(string[index:], token_list, expr_type=LT.EXPR)
 
         elif c == FUNCTION_TOKEN:
             if arg_strip(arg) != "":

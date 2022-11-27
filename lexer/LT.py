@@ -7,10 +7,12 @@ class LT(Enum):
         return str(self)
 
     # Args
-    ARG = auto(), # A('1')
+    ARG = auto(),  # A('1')
     ARGS = auto(),  # A'('1)
     ARGS_END = auto(),  # A(1')'
 
+    # Expression
+    EXPR = auto(),  # A('"..."')
     # #comment
     COMMENT = auto(),  # '#'
 

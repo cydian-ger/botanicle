@@ -8,21 +8,21 @@ from lexer.static import ARG_OPEN, ARG_CLOSE
 
 
 @dataclass(frozen=True, slots=True)
-class LToken:
+class LMatch:
     name: Name
-    values: Value_List[Name]
+    values: Value_List[Name]  # Variable names
 
     @property
     def var_len(self):
         return len(self.values)
 
-    def __eq__(self, other: LToken) -> bool:
+    def __eq__(self, other: LMatch) -> bool:
         return (
                 self.name == other.name and
                 self.var_len == other.var_len
         )
 
-    def __ne__(self, other: LToken) -> bool:
+    def __ne__(self, other: LMatch) -> bool:
         return not self == other
 
     def __repr__(self):

@@ -8,7 +8,7 @@ from lexer.static import ARGV_DEBUG
 
 
 class LWarning:
-    def __init__(self, message: str, warning: Warning = Warning, caller: Optional[Tuple[str, str]] = None):
+    def __init__(self, message: str, warning = Warning, caller: Optional[Tuple[str, str]] = None):
         self.message = message
         self.warning = warning
 

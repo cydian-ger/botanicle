@@ -4,7 +4,7 @@ from lexer.lex_error import LexError
 from lexer.static import EXPR, LINE_BREAK
 
 
-def lex_expr(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_expr(string: str, token_list: List[Tuple[LT, Any]], expr_type=LT.CON_EXPR) -> int:
     index = 1
     expr = ""
 
@@ -12,7 +12,7 @@ def lex_expr(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         c = string[index]
 
         if c == EXPR:
-            token_list.append((LT.CON_EXPR, expr))
+            token_list.append((expr_type, expr))
             break
 
         elif c == LINE_BREAK:

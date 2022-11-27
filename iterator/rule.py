@@ -1,8 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
-from datatypes import Value_List
-from iterator.Ltoken import LToken
+from datatypes import Value_List, Name
+from iterator.LMatch import LMatch
 from lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT, CONDITION_TOKEN, RESULT_TOKEN, ARG_OPEN, \
     ARG_CLOSE
 
@@ -10,12 +10,25 @@ from lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT, CONDITIO
 @dataclass  # (frozen=True)
 class Rule:
     # Names NEED to be unique
-    match: LToken  # A
+    match: LMatch  # A
     assignment: Optional[str]  # Name used by other rules to call it e.g. ".rule1" would be "'rule1'"
-    left_context: Optional[Value_List[LToken]]  # A(a) B(b) C(c) > SELF
-    right_context: Optional[Value_List[LToken]]  # SELF < A(a) B(b) C(c)
+    left_context: Optional[Value_List[LMatch]]  # A(a) B(b) C(c) > SELF
+    right_context: Optional[Value_List[LMatch]]  # SELF < A(a) B(b) C(c)
     condition: Optional[str]  # Condition :a == b =>
-    result: Optional[Value_List[LToken]]
+    result: Optional[Value_List[LMatch]]
+
+    def __post_init__(self):
+        self.variables: Value_List[Name] = Value_List()
+        self.variables.set_type(Name)
+
+        var_list = (self.left_context or []) + [self.match] + (self.right_context or [])
+
+        for var in var_list:
+            for var_name in var.values:
+                if var_name in self.variables:
+                    raise KeyError(f"Variable name '{var_name}' is defined more than once in the match.")
+                else:
+                    self.variables.append(var_name)
 
     def __eq__(self, other: Rule) -> bool:
 
