@@ -49,8 +49,8 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
         ltoken = Token(argument[1])
 
         # If the l token is already a
-        if ltoken in bottle.groups:
-            for bottle_ltoken in bottle.groups[ltoken]:
+        if ltoken in bottle.match_groups:
+            for bottle_ltoken in bottle.match_groups[ltoken]:
                 append(bottle_ltoken, group_values, group_name)
 
         # If the token is not defined already but is a special axiom
@@ -63,11 +63,11 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
 
     # Warn if the group_values are already in the bottle under a different name
     if sys.argv.__contains__(ARGV_WARNING):
-        for name, values in bottle.groups.items():
+        for name, values in bottle.match_groups.items():
             if values == group_values:
                 LWarning(f"Group '{group_name}: ({', '.join(group_values)})' is already in the bottle: "
                          f"''{name}: ({', '.join(values)})''").throw()
 
-    bottle.groups[group_name] = group_values
+    bottle.match_groups[group_name] = group_values
 
     return

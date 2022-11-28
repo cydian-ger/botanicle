@@ -146,7 +146,11 @@ def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     )
 
     if rule in bottle.rule_list:
-        raise SyntaxError(f"Equivalent rule already defined: '{rule}'")
+        raise SyntaxError(f"There already exists a rule with equivalent match for the rule: '{rule}'")
+
+    for variable in rule.variables:
+        if variable in bottle.variables.keys():
+            raise KeyError(f"Match Variable '{variable}' overrides defined variable.")
 
     bottle.rule_list.append(rule)
     # bottle.rule

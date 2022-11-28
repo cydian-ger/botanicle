@@ -21,7 +21,7 @@ class Frame:
 @dataclass
 class Bottle:
     variables: Dict[Name, Value]
-    groups: Dict[Token, Value_List[Token]]
+    match_groups: Dict[Token, Value_List[Token]]
     context_ignore: Set[Token]
     frame: Frame
     rule_assignments: Set[Name]
@@ -32,7 +32,7 @@ class Bottle:
         self.rule_assignments = set()
         self.context_ignore = set()
         self.variables = dict()
-        self.groups = dict()
+        self.match_groups = dict()
         self.frame = Frame()
 
     def add_variable(self, variable_name: Name, variable_value: Value):
@@ -42,7 +42,7 @@ class Bottle:
         self.variables[variable_name] = variable_value
 
     def token_already_exists(self, ltoken: Token):
-        if ltoken in self.groups.keys():
+        if ltoken in self.match_groups.keys():
             return True
 
         if ltoken in self.frame.linked_files.keys():

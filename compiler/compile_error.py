@@ -18,8 +18,8 @@ class Compile_Error(LError):
 
             while frame.tb_next is not None:
                 frame = frame.tb_next
-                exception_trace.append(f"{pathlib.PurePath(frame.tb_frame.f_code.co_filename).name}"
-                                       f"{frame.tb_frame.f_code.co_name}"
+                exception_trace.append(f"{pathlib.PurePath(frame.tb_frame.f_code.co_filename).name}, "
+                                       f"{frame.tb_frame.f_code.co_name}, "
                                        f"{frame.tb_frame.f_lineno}")
 
             super().__init__(message, exception=type(exception),

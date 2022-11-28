@@ -44,9 +44,6 @@ class Rule:
         if self.condition != other.condition:
             return False
 
-        if self.result != other.result:
-            return False
-
         return True
 
     def __repr__(self):

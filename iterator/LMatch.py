@@ -1,16 +1,24 @@
 from __future__ import annotations
-from dataclasses import dataclass
 
-# Actual used thing. A(1)
-# Has to be associated to a rule
-from datatypes import Name, Value_List
+from typing import Union
+from dataclasses import dataclass
+from datatypes import Name, Value_List, Expression
 from lexer.static import ARG_OPEN, ARG_CLOSE
 
 
 @dataclass(frozen=True, slots=True)
 class LMatch:
     name: Name
-    values: Value_List[Name]  # Variable names
+    values: Value_List[Union[Name, Expression]]  # Variable names
+
+    def __call__(self, *args) -> bool:
+        if len(args) != self.var_len + 1:
+            return False
+
+        if args[0] != self.name:
+            return False
+
+        return True
 
     @property
     def var_len(self):
@@ -21,9 +29,6 @@ class LMatch:
                 self.name == other.name and
                 self.var_len == other.var_len
         )
-
-    def __ne__(self, other: LMatch) -> bool:
-        return not self == other
 
     def __repr__(self):
         # no vars
