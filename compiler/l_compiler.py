@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 
 from compiler.bottle import Bottle
 from compiler.compile_error import Compile_Error
@@ -9,11 +9,11 @@ from colorama import Fore, Style
 
 
 # This compiles a single file
-def l_compile(token_list: List[Tuple[LT, Any]]):
+def l_compile(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]):
     bottle: Bottle = Bottle()
 
     try:
-        for token, content in token_list:
+        for token, content, token_index in token_list:
             content: List[Tuple[LT, Any]]
 
             match token:

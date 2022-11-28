@@ -1,10 +1,11 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_error import LexError
 from lexer.static import SPACE, LINE_BREAK, ARG_OPEN, FUNCTION_TOKEN, ARG_CLOSE, ARG_DELIMITER
+from lexer.lex_global import char
 
 
-def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_function(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     index = 0
     func = ""
 
@@ -14,7 +15,7 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         if c == ARG_OPEN or c == SPACE or c == ARG_DELIMITER or c == ARG_CLOSE:
             if func == "":
                 raise LexError(f"Function name must not be empty", string[index:], SyntaxError)
-            token_list.append((LT.FUNCTION, func))
+            token_list.append((LT.FUNCTION, func, char(string[index:])))
             # index -= 1
             break
 

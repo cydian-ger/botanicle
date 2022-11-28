@@ -17,7 +17,7 @@ def ignore(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     ignore_list = Value_List()
     ignore_list.set_type(Token)
 
-    for _, ltoken in token_list[0][1]:
+    for _, ltoken, __ in token_list[0][1]:
         ignore_list.append(Token(ltoken))
 
     if not not bottle.context_ignore:

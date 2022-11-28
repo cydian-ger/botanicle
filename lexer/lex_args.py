@@ -1,5 +1,5 @@
 from lexer.LT import LT
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 
 from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
@@ -7,17 +7,18 @@ from lexer.lex_function import lex_function
 from lexer.lex_reference import lex_reference
 from lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
     EMPTY_ARGUMENT
+from lexer.lex_global import char
 
 
 def arg_strip(string: str) -> str:
     return string.strip(" ")
 
 
-def lex_args(string: str, token_list: List[Tuple[LT, Any]],
+def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
              arg_tokens: Tuple[LT, LT, LT] = (LT.ARGS, LT.ARG, LT.ARGS_END)) -> int:
     # arg_tokens: the tokens that start / end the args and the arg names.
 
-    token_list.append((arg_tokens[0], None))
+    token_list.append((arg_tokens[0], None, char(string)))
     # Start at 1 to forgo the open token, because you can only jump to this function if index[0] == ARG TOKEN
     index = 1
     arg = ""
@@ -38,16 +39,16 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any]],
 
             if arg != "":
                 if arg == EMPTY_ARGUMENT:
-                    token_list.append((arg_tokens[1], ""))
+                    token_list.append((arg_tokens[1], "", char(string[index:])))
 
                 else:
                     # Put the argument
-                    token_list.append((arg_tokens[1], arg))
+                    token_list.append((arg_tokens[1], arg, char(string[index:])))
                     arg = ""
 
             if c == ARG_CLOSE:
                 # Put the end argument name
-                token_list.append((arg_tokens[2], None))
+                token_list.append((arg_tokens[2], None, char(string[index:])))
                 break
 
         elif c == EXPR:

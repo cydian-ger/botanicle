@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_error import LexError
 from lexer.lex_statement import lex_statement
@@ -6,41 +6,42 @@ from lexer.lex_comment import lex_comment
 from lexer.lex_linebreak import lex_linebreak
 from lexer.lex_rule import lex_rule
 from lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
+from lexer.lex_global import char
 from colorama import Fore, Style, Back
 
 
-def _line_info(string: str, index: int, token_list):
+def _line_info(string: str, index: int, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]):
     line_number = string[:index].count("\n") + 1
     line = string.split("\n")[line_number - 1]
-    token_list.append((LT.INFO, {"line_number": line_number, "line_text": line}))
+    token_list.append((LT.INFO, {"line_number": line_number, "line_text": line}, char(string[index:])))
 
 
 def lex(string: str):
     try:
         # If any definition block has been opened and not yet closed its put here
-        token_list: List[Tuple[LT, Any]] = list()
+        token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]] = list()
 
         index = 0
         while index < len(string):
-            char = string[index]
+            c = string[index]
             # Skip new lines
-            if char == LINE_BREAK:
+            if c == LINE_BREAK:
                 index += lex_linebreak(string[index:], token_list)
 
-            elif char in VALID_STATEMENT_CHARACTERS:
-                token_list.append((LT.STATEMENT, None))
+            elif c in VALID_STATEMENT_CHARACTERS:
+                token_list.append((LT.STATEMENT, None, char(string[index:])))
                 _line_info(string, index, token_list)
                 index += lex_statement(string[index:], token_list)
 
-            elif char == "#":
+            elif c == "#":
                 index += lex_comment(string[index:], token_list)
 
             # elif char in SPECIAL_AXIOMS:
             #     raise NotImplementedError
             # Concretely define special axiom behaviour
 
-            elif char in VALID_RULE_START:
-                token_list.append((LT.RULE, None))
+            elif c in VALID_RULE_START:
+                token_list.append((LT.RULE, None, char(string[index:])))
                 _line_info(string, index, token_list)
                 index += lex_rule(string[index:], token_list)
 
@@ -59,8 +60,8 @@ def lex(string: str):
         # If the linebreak index is greater than fault index we know its inbetween the lines
         line_breaks: List[int] = [0]
 
-        for index, char in enumerate(string):
-            if char == LINE_BREAK:
+        for index, c in enumerate(string):
+            if c == LINE_BREAK:
                 line_breaks.append(index)
 
             if line_breaks[-1] >= fault_index:

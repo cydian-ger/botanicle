@@ -1,10 +1,11 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_error import LexError
 from lexer.static import EXPR, LINE_BREAK
+from lexer.lex_global import char
 
 
-def lex_expr(string: str, token_list: List[Tuple[LT, Any]], expr_type=LT.CON_EXPR) -> int:
+def lex_expr(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], expr_type=LT.CON_EXPR) -> int:
     index = 1
     expr = ""
 
@@ -12,7 +13,7 @@ def lex_expr(string: str, token_list: List[Tuple[LT, Any]], expr_type=LT.CON_EXP
         c = string[index]
 
         if c == EXPR:
-            token_list.append((expr_type, expr))
+            token_list.append((expr_type, expr, char(string[index:])))
             break
 
         elif c == LINE_BREAK:

@@ -1,10 +1,11 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_error import LexError
 from lexer.static import SPACE, ASSIGNMENT_TOKEN, LINE_BREAK
+from lexer.lex_global import char
 
 
-def lex_assignment(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_assignment(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     index = 0
     assignment = ""
 
@@ -35,5 +36,5 @@ def lex_assignment(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         raise LexError(f"Assignment Token '{ASSIGNMENT_TOKEN}' has to be followed by at least 1 letter.",
                        string[index:], SyntaxError)
 
-    token_list.append((LT.ASSIGNMENT, assignment))
+    token_list.append((LT.ASSIGNMENT, assignment, char(string[index:])))
     return index

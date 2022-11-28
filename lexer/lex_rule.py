@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_args import lex_args
 from lexer.lex_assignment import lex_assignment
@@ -9,9 +9,10 @@ from lexer.lex_ltoken import lex_ltoken
 from lexer.lex_condition import lex_condition
 from lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RESULT_TOKEN, LINE_BREAK, \
     ASSIGNMENT_TOKEN, FUNCTION_TOKEN, ARG_OPEN
+from lexer.lex_global import char
 
 
-def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     index = 0
     result_token: bool = False
     condition_token: bool = False
@@ -40,7 +41,7 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
                 index += 1
 
         elif c in CONTEXT_TOKENS:
-            token_list.append((LT.CONTEXT_TOKEN, c))
+            token_list.append((LT.CONTEXT_TOKEN, c, char(string[index:])))
             index += 1
 
         elif c == CONDITION_TOKEN:
@@ -55,14 +56,14 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any]]) -> int:
                 raise LexError("Result token can not appear more than once in a rule.", string[index:], SyntaxError)
             result_token = True
 
-            token_list.append((LT.RESULT, None))
+            token_list.append((LT.RESULT, None, char(string[index:])))
             index += 1
 
         elif c == LINE_BREAK:
             index += 1
 
             if result_token:
-                token_list.append((LT.RESULT_END, None))
+                token_list.append((LT.RESULT_END, None, char(string[index:])))
 
             index += lex_linebreak(string[index:], token_list)
             break

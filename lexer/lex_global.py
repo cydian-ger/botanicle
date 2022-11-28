@@ -15,9 +15,9 @@ def init_lex(string: str):
         raise RuntimeError("Variable already defined")
 
 
-def get_char(str_left: str):
+def char(str_left: str):
     # str_left is the amount of string that is left
-    return Lexer.string - len(str_left)
+    return len(Lexer.string) - len(str_left)
 
 
 def throw_error(error: LError, error_position:Tuple[int, int]):

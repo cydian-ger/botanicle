@@ -1,8 +1,9 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
+from lexer.lex_global import char
 
 
-def lex_reference(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_reference(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     # Maybe call it a reference or something
     # @testline
 
@@ -19,6 +20,6 @@ def lex_reference(string: str, token_list: List[Tuple[LT, Any]]) -> int:
         assignment_call += c
         index += 1
 
-    token_list.append((LT.REFERENCE, assignment_call))
+    token_list.append((LT.REFERENCE, assignment_call, char(string[index:])))
 
     return index

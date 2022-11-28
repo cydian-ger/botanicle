@@ -1,14 +1,15 @@
 from lexer.LT import LT
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 
 from lexer.lex_args import lex_args
 from lexer.lex_error import LexError
 from lexer.lex_expr import lex_expr
 from lexer.lex_linebreak import lex_linebreak
 from lexer.static import KEYWORDS, LINE_BREAK, ARG_OPEN, EXPR, PATH_CHARS
+from lexer.lex_global import char
 
 
-def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
+def lex_statement(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     index = 0
     expr = ""
 
@@ -17,19 +18,19 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any]]) -> int:
 
         if c == " " or c == LINE_BREAK:
             if expr in KEYWORDS:
-                token_list.append((LT.KEYWORD, expr))
+                token_list.append((LT.KEYWORD, expr, char(string[index:])))
 
             elif len(expr) > 0:
                 # If the first char is a digit it will be a value
                 if expr[0].isdigit():
-                    token_list.append((LT.VALUE, expr))
+                    token_list.append((LT.VALUE, expr, char(string[index:])))
 
                 # If the expression contains path characters like "." and "/"
-                elif len([char for char in PATH_CHARS if expr.__contains__(char)]) > 0:
-                    token_list.append((LT.PATH, expr))
+                elif len([character for character in PATH_CHARS if expr.__contains__(character)]) > 0:
+                    token_list.append((LT.PATH, expr, char(string[index:])))
                 # If the first char is not a digit
                 else:
-                    token_list.append((LT.NAME, expr))
+                    token_list.append((LT.NAME, expr, char(string[index:])))
 
             if c == LINE_BREAK:
                 index += lex_linebreak(string[index:], token_list)

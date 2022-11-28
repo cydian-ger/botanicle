@@ -1,13 +1,14 @@
 import re
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Union
 from lexer.LT import LT
 from lexer.lex_args import lex_args
 from lexer.lex_error import LexError
 from lexer.static import RESULT_TOKEN, LINE_BREAK, ARG_OPEN, CONDITION_TOKEN
+from lexer.lex_global import char
 
 
-def lex_condition(string: str, token_list: List[Tuple[LT, Any]]) -> int:
-    token_list.append((LT.CONDITION, None))
+def lex_condition(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
+    token_list.append((LT.CONDITION, None, char(string)))
     # TODO
     # Allow multiple arguments
     expr = ""
@@ -39,7 +40,7 @@ def lex_condition(string: str, token_list: List[Tuple[LT, Any]]) -> int:
     expr = expr.lstrip(':').strip(' ')  # Strip all spaces at the end and all : that precede the message
 
     if expr:
-        token_list.append((LT.CON_EXPR, expr))
+        token_list.append((LT.CON_EXPR, expr, char(string[index:])))
 
-    token_list.append((LT.CONDITION_END, None))
+    token_list.append((LT.CONDITION_END, None, char(string[index:])))
     return index

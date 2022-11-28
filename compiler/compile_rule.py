@@ -14,7 +14,7 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
     token_args = Value_List()
     token_args.set_type(argument_class)
     # Add every argument
-    for arg_t, arg_v in args:
+    for arg_t, arg_v, _ in args:
         if arg_t == LT.ARG or arg_t == LT.EXPR:
 
             if ac_kwargs:
@@ -32,9 +32,9 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
     return LMatch(token_name, token_args)
 
 
-def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
+def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle):
     name: Optional[Name] = None
-    for token, content in token_list:
+    for token, content, token_index in token_list:
         if token not in {LT.ASSIGNMENT, LT.LTOKEN, LT.ARGS, LT.CONTEXT_TOKEN, LT.CONDITION, LT.RESULT,
                          LT.FUNCTION, LT.FUNCTION_ARGS}:
             raise SyntaxError(f"{token} is not an allowed Token in a Rule")
@@ -80,7 +80,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     index = 0
 
     while index < len(token_list):
-        token, content = token_list[index]
+        token, content, token_index = token_list[index]
 
         if token == LT.LTOKEN:
             ltoken = _compile_lmatch(content[0][1], content[1][1], Name)
@@ -95,7 +95,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
 
         # Take the condition
         elif token == LT.CONDITION and content != []:
-            con_token, con_content = content[0]
+            con_token, con_content, con_index = content[0]
             # Package conditions as list
             condition = Value_List()
             condition.set_type(Expression)
@@ -113,7 +113,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
             result.set_type(LMatch)
 
             # Compile and pack all LTokens embedded in the result
-            for _, result_content in content:
+            for _, result_content, result_index in content:
                 result_token = _compile_lmatch(result_content[0][1], result_content[1][1], Expression,
                                                {"result_type": Union[float, int]})
                 result.append(result_token)
@@ -156,7 +156,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
     # bottle.rule
 
 
-def compile_rule(token_list: List[Tuple[LT, Any]], bottle: Bottle):
+def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle):
     info = token_list.pop(0)[1]
 
     try:
