@@ -3,7 +3,7 @@ from compiler.bottle import Bottle
 from common.datatypes import Token, Name
 from compiler.lexer.LT import LT
 from compiler.lexer.static import KW
-from compiler.lexer.lex_global import lraise
+from compiler.compiler_global import lraise
 
 
 def include(token_list: List[Tuple[LT, Any, Tuple[int, int]]],

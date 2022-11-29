@@ -6,7 +6,7 @@ from compiler.lexer.lex_comment import lex_comment
 from compiler.lexer.lex_linebreak import lex_linebreak
 from compiler.lexer.lex_rule import lex_rule
 from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
-from compiler.lexer.lex_global import char
+from compiler.compiler_global import char
 from colorama import Fore, Style, Back
 
 

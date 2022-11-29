@@ -7,7 +7,7 @@ from compiler.lexer.lex_function import lex_function
 from compiler.lexer.lex_reference import lex_reference
 from compiler.lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
     EMPTY_ARGUMENT
-from compiler.lexer.lex_global import char
+from compiler.compiler_global import char
 
 
 def arg_strip(string: str) -> str:

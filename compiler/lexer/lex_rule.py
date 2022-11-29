@@ -9,7 +9,7 @@ from compiler.lexer.lex_ltoken import lex_ltoken
 from compiler.lexer.lex_condition import lex_condition
 from compiler.lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RESULT_TOKEN, LINE_BREAK, \
     ASSIGNMENT_TOKEN, FUNCTION_TOKEN, ARG_OPEN
-from compiler.lexer.lex_global import char
+from compiler.compiler_global import char
 
 
 def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:

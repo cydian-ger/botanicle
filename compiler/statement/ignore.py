@@ -2,7 +2,7 @@ from typing import List, Tuple, Any
 from compiler.bottle import Bottle
 from common.datatypes import Value_List, Token
 from compiler.lexer.LT import LT
-from compiler.lexer.lex_global import lraise
+from compiler.compiler_global import lraise
 
 
 def ignore(token_list: List[Tuple[LT, Any, Tuple[int, int]]],

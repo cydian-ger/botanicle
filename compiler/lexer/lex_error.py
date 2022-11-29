@@ -1,7 +1,7 @@
 import sys
 from common.LError import LError
 from compiler.lexer.static import ARGV_DEBUG
-from compiler.lexer.lex_global import Lexer
+from compiler.compiler_global import Compiler
 
 
 class LexError(LError):
@@ -16,7 +16,7 @@ class LexError(LError):
         error_msg = f'<{self.exception.__name__}>. {self.message}'
 
         if sys.argv.__contains__(ARGV_DEBUG):
-            print(len(Lexer.string))
+            print(len(Compiler.string))
             return f"{error_msg}\n-debug <error_origin> {self.caller}"
 
         return error_msg
