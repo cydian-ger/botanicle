@@ -1,7 +1,7 @@
 from compiler.lexer.LT import LT
 from compiler.lexer.static import LINE_BREAK
 from typing import List, Tuple, Any, Union
-from compiler.compiler_global import char
+from compiler.Lglobal import char
 
 
 def lex_linebreak(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:

@@ -7,7 +7,7 @@ from compiler.lexer.lex_function import lex_function
 from compiler.lexer.lex_reference import lex_reference
 from compiler.lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
     EMPTY_ARGUMENT
-from compiler.compiler_global import char
+from compiler.Lglobal import char, lraise
 
 
 def arg_strip(string: str) -> str:
@@ -28,7 +28,7 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         if c == LINE_BREAK:
             # Linebreak before the arg end
-            raise LexError("Linebreak before the end of an arg", string[index:], SyntaxError)
+            lraise(SyntaxError("Linebreak before the end of an arg"), char(string[index:]))
 
         elif c == ARG_OPEN:
             index += lex_args(string[index:], token_list)
@@ -56,8 +56,8 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         elif c == FUNCTION_TOKEN:
             if arg_strip(arg) != "":
-                raise LexError(f"Function token '{FUNCTION_TOKEN} has to be the first character of the argument."
-                               , string[index:], SyntaxError)
+                lraise(SyntaxError(f"Function token '{FUNCTION_TOKEN} has to be the first character of the argument.")
+                               , char(string[index:]))
 
             index += lex_function(string[index:], token_list)
             continue

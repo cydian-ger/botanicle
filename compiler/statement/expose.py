@@ -3,7 +3,7 @@ from compiler.bottle import Bottle
 from common.datatypes import Value_List, Name, Expression
 from compiler.lexer.LT import LT
 from compiler.lexer.static import KW
-from compiler.compiler_global import lraise
+from compiler.Lglobal import lraise
 
 
 def expose(token_list: List[Tuple[LT, Any, Tuple[int, int]]],

@@ -1,7 +1,7 @@
 import sys
 from common.LError import LError
 from compiler.lexer.static import ARGV_DEBUG
-from compiler.compiler_global import Compiler
+from compiler.Lglobal import Compiler
 
 
 class LexError(LError):

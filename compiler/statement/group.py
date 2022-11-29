@@ -5,7 +5,7 @@ from typing import List, Tuple, Any
 from common.LWarning import LWarning
 from common.datatypes import Value_List, Token
 from compiler.lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
-from compiler.compiler_global import lraise
+from compiler.Lglobal import lraise
 
 
 def append(ltk, group_values, name):

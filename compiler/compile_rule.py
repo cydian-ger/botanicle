@@ -6,7 +6,7 @@ from common.iterator.LMatch import LMatch
 from common.iterator.rule import Rule
 from compiler.lexer.LT import LT
 from compiler.lexer.static import CONTEXT_LEFT, CONTEXT_RIGHT
-from compiler.compiler_global import lraise
+from compiler.Lglobal import lraise
 
 
 def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expression)], ac_kwargs: Optional[Dict] = None):

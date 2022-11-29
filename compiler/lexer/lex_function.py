@@ -2,7 +2,7 @@ from typing import List, Tuple, Any, Union
 from compiler.lexer.LT import LT
 from compiler.lexer.lex_error import LexError
 from compiler.lexer.static import SPACE, LINE_BREAK, ARG_OPEN, FUNCTION_TOKEN, ARG_CLOSE, ARG_DELIMITER
-from compiler.compiler_global import char
+from compiler.Lglobal import char
 
 
 def lex_function(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:

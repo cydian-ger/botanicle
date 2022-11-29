@@ -1,34 +1,20 @@
-import sys
-from typing import Tuple
+from typing import Union, Tuple
 
-from colorama import Back, Style, Fore
-
+from compiler.Lglobal import Compiler
 from compiler.lexer.static import LINE_BREAK
 
-Compiler = sys.modules[__name__]
-
-Compiler.string = None
-Compiler.err_padding = None
+from colorama import Fore, Back, Style
 
 
-def init_compiler(string: str):
-    if Compiler.string is None:
-        Compiler.string = string
-        Compiler.err_padding = 2
-    else:
-        raise RuntimeError("Variable already defined")
+def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]]):
 
+    if isinstance(err_pos, int):
+        err_pos = (err_pos, err_pos + 1)
 
-def char(str_left: str):
-    # str_left is the amount of string that is left
-    return len(Compiler.string) - len(str_left)
-
-
-def lraise(error: BaseException, err_pos: Tuple[int, int]):
     file_text = Compiler.string.split(LINE_BREAK)
     for index, line in enumerate(file_text):
         line: str
-        file_text[index] = line + "\n"
+        file_text[index] = line + " "  # Space instead of breakline
 
     index = 0
     line_start_index = list()
@@ -50,13 +36,14 @@ def lraise(error: BaseException, err_pos: Tuple[int, int]):
     print(Fore.RED, end="")
     print(f"Line {fault_line_index + 1}: " + repr(error))
 
-    print("─" * len(fault_line))
+    fault_line_name = f"{fault_line_index + 1}: "
+    print("─" * (len(fault_line) + len(fault_line_name)))
 
-    print(f"{Style.RESET_ALL}{fault_line[:in_line_index[0]]}"
+    print(f"{Style.RESET_ALL}{fault_line_name}{fault_line[:in_line_index[0]]}"
           f"{Back.LIGHTRED_EX}{fault_line[in_line_index[0]:in_line_index[1]]}{Style.RESET_ALL}"
-          f"{fault_line[in_line_index[1]:]}{Fore.RED}", end="")  # End is "" because there is new line at the end
+          f"{fault_line[in_line_index[1]:]}{Fore.RED}")
 
-    print("─" * in_line_index[0] +
+    print("─" * (in_line_index[0] + len(fault_line_name)) +
           "↑" * (in_line_index[1] - in_line_index[0]) +
           "─" * (len(fault_line) - in_line_index[1]))
 

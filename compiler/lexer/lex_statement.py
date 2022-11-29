@@ -6,7 +6,7 @@ from compiler.lexer.lex_error import LexError
 from compiler.lexer.lex_expr import lex_expr
 from compiler.lexer.lex_linebreak import lex_linebreak
 from compiler.lexer.static import KEYWORDS, LINE_BREAK, ARG_OPEN, EXPR, PATH_CHARS
-from compiler.compiler_global import char
+from compiler.Lglobal import char
 
 
 def lex_statement(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
