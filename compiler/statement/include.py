@@ -1,31 +1,33 @@
 from typing import List, Tuple, Any
 from compiler.bottle import Bottle
-from datatypes import Token, Name
-from lexer.LT import LT
-from lexer.static import KW
+from common.datatypes import Token, Name
+from compiler.lexer.LT import LT
+from compiler.lexer.static import KW
+from compiler.lexer.lex_global import lraise
 
 
-def include(token_list: List[Tuple[LT, Any]], bottle: Bottle):
+def include(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
+           bottle: Bottle, parent_token: Tuple[LT, Any, Tuple[int, int]]):
     # CHECK FORM
     # include: [path alias token]
 
     if len(token_list) != 3:
-        raise SyntaxError(f"Include takes 3 Arguments. {len(token_list)} were provided.")
+        lraise(SyntaxError(f"Include takes 3 Arguments. {len(token_list)} were provided."), parent_token[2])
 
     if not token_list[0][0] == LT.PATH:
-        raise ValueError("First argument has to be a path.")
+        lraise(ValueError("First argument has to be a path."), token_list[0][2])
 
     if not token_list[1][0] == LT.KEYWORD or not token_list[1][1] == KW.alias:
-        raise ValueError(f"Second argument has to be keyword: '{KW.alias}'")
+        lraise(ValueError(f"Second argument has to be keyword: '{KW.alias}'"), token_list[1][1])
 
     if not token_list[2][0] == LT.NAME:
-        raise ValueError(f"Third argument has to be a token")
+        lraise(ValueError(f"Third argument has to be a token"), token_list[2][2])
 
     path = Name(token_list[0][1])
     ltoken = Token(token_list[2][1])
 
     if bottle.token_already_exists(ltoken):
-        raise KeyError(f"LToken already defined")
+        lraise(KeyError(f"LToken already defined"), token_list[2][2])
 
     bottle.frame.linked_files[ltoken] = path
     return

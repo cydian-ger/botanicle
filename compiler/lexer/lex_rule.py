@@ -1,15 +1,15 @@
 from typing import List, Tuple, Any, Union
-from lexer.LT import LT
-from lexer.lex_args import lex_args
-from lexer.lex_assignment import lex_assignment
-from lexer.lex_error import LexError
-from lexer.lex_function import lex_function
-from lexer.lex_linebreak import lex_linebreak
-from lexer.lex_ltoken import lex_ltoken
-from lexer.lex_condition import lex_condition
-from lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RESULT_TOKEN, LINE_BREAK, \
+from compiler.lexer.LT import LT
+from compiler.lexer.lex_args import lex_args
+from compiler.lexer.lex_assignment import lex_assignment
+from compiler.lexer.lex_error import LexError
+from compiler.lexer.lex_function import lex_function
+from compiler.lexer.lex_linebreak import lex_linebreak
+from compiler.lexer.lex_ltoken import lex_ltoken
+from compiler.lexer.lex_condition import lex_condition
+from compiler.lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RESULT_TOKEN, LINE_BREAK, \
     ASSIGNMENT_TOKEN, FUNCTION_TOKEN, ARG_OPEN
-from lexer.lex_global import char
+from compiler.lexer.lex_global import char
 
 
 def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
@@ -41,7 +41,7 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
                 index += 1
 
         elif c in CONTEXT_TOKENS:
-            token_list.append((LT.CONTEXT_TOKEN, c, char(string[index:])))
+            token_list.append((LT.CONTEXT_TOKEN, c, char(string[index + 1:])))
             index += 1
 
         elif c == CONDITION_TOKEN:

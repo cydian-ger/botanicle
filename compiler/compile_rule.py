@@ -1,12 +1,12 @@
 from typing import List, Optional, Union, Dict, Tuple, Any
 
 from compiler.bottle import Bottle
-from compiler.compile_error import Compile_Error
-from datatypes import Name, Value_List, Expression
-from iterator.LMatch import LMatch
-from iterator.rule import Rule
-from lexer.LT import LT
-from lexer.static import CONTEXT_LEFT, CONTEXT_RIGHT
+from common.datatypes import Name, Value_List, Expression
+from common.iterator.LMatch import LMatch
+from common.iterator.rule import Rule
+from compiler.lexer.LT import LT
+from compiler.lexer.static import CONTEXT_LEFT, CONTEXT_RIGHT
+from compiler.lexer.lex_global import lraise
 
 
 def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expression)], ac_kwargs: Optional[Dict] = None):
@@ -14,7 +14,7 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
     token_args = Value_List()
     token_args.set_type(argument_class)
     # Add every argument
-    for arg_t, arg_v, _ in args:
+    for arg_t, arg_v, arg_i in args:
         if arg_t == LT.ARG or arg_t == LT.EXPR:
 
             if ac_kwargs:
@@ -27,24 +27,25 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
             raise NotImplementedError("Functions as arguments in LTokens are not supported yet")
 
         else:
-            raise SyntaxError(f"Invalid Argument Type for Token: {arg_t}.")
+            lraise(SyntaxError(f"Invalid Argument Type for Token: {arg_t}."), arg_i)
 
     return LMatch(token_name, token_args)
 
 
-def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle):
+def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle,
+                  line_token: Tuple[LT, Any, Tuple[int, int]]):
     name: Optional[Name] = None
     for token, content, token_index in token_list:
         if token not in {LT.ASSIGNMENT, LT.LTOKEN, LT.ARGS, LT.CONTEXT_TOKEN, LT.CONDITION, LT.RESULT,
                          LT.FUNCTION, LT.FUNCTION_ARGS}:
-            raise SyntaxError(f"{token} is not an allowed Token in a Rule")
+            lraise(SyntaxError(f"{token} is not an allowed Token in a Rule"), token_index)
 
         if token is LT.ASSIGNMENT:
             name = Name(content)
 
     if name is not None:
         if name in bottle.rule_assignments:
-            raise KeyError(f"Line assignment '{name}' appeared more than once.")
+            lraise(KeyError(f"Line assignment '{name}' appeared more than once."), line_token[2])
 
         else:
             bottle.rule_assignments.add(name)
@@ -55,20 +56,22 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
 
     # If there are no result tokens in the rule raise Error
     if len([_ for _ in token_list if _[0] == LT.RESULT]) == 0:
-        raise SyntaxError(f"Rule has to contain a result")
+        lraise(SyntaxError(f"Rule has to contain a result"), line_token[2])
 
     # Check if there are a valid amount of context tokens and if they are arranged correctly.
-    context_tokens = [_[1] for _ in token_list if _[0] == LT.CONTEXT_TOKEN]
+    context_tokens = [_ for _ in token_list if _[0] == LT.CONTEXT_TOKEN]
     if len(context_tokens) > 2:
-        raise SyntaxError(f"Only two context tokens are allowed per rule. {len(context_tokens)} were provided ("
-                          f"{context_tokens}).")
+        lraise(SyntaxError(f"Only two context tokens are allowed per rule. {len(context_tokens)} were provided.")
+               , context_tokens[2][2])
 
     elif len(context_tokens) == 2:
-        if context_tokens[0] == context_tokens[1]:
-            raise SyntaxError(f"Context tokens must be different.")
+        if not context_tokens[0][1] == CONTEXT_LEFT:
+            lraise(SyntaxError(f"First context token has to be: '{CONTEXT_LEFT}' but is '{context_tokens[0][1]}'"),
+                   context_tokens[0][2])
 
-        if not (context_tokens[0] == CONTEXT_LEFT and context_tokens[1] == CONTEXT_RIGHT):
-            raise SyntaxError(f"Context tokens must be in order '{CONTEXT_LEFT}', '{CONTEXT_RIGHT}'")
+        if not (context_tokens[1][1] == CONTEXT_RIGHT):
+            lraise(SyntaxError(f"Second context token has to be: '{CONTEXT_RIGHT}' but is '{context_tokens[1][1]}'"),
+                   context_tokens[1][2])
 
     # CONTINUE LEXING
     left_context: Optional[List[LMatch]] = None
@@ -156,17 +159,18 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
     # bottle.rule
 
 
-def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle):
+def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle,
+                 line_token: Tuple[LT, Any, Tuple[int, int]]):
     info = token_list.pop(0)[1]
 
-    try:
-        _compile_rule(token_list, bottle)
+    _compile_rule(token_list, bottle, line_token)
+    """
     except Compile_Error as e:
         raise e
-
+    
     except Exception as e:
         if len(e.args) > 0:
             raise Compile_Error(e.args[0], info, e)
-
+    
         else:
-            raise Compile_Error("ERROR MSG MISSING", info, e)
+            raise Compile_Error("ERROR MSG MISSING", info, e)"""

@@ -1,8 +1,8 @@
 from typing import Dict, Set, Optional, List
-from datatypes import *
+from common.datatypes import *
 from dataclasses import dataclass
 
-from iterator.rule import Rule
+from common.iterator.rule import Rule
 
 
 @dataclass

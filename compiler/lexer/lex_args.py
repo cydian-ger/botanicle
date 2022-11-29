@@ -1,13 +1,13 @@
-from lexer.LT import LT
+from compiler.lexer.LT import LT
 from typing import List, Tuple, Any, Union
 
-from lexer.lex_error import LexError
-from lexer.lex_expr import lex_expr
-from lexer.lex_function import lex_function
-from lexer.lex_reference import lex_reference
-from lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
+from compiler.lexer.lex_error import LexError
+from compiler.lexer.lex_expr import lex_expr
+from compiler.lexer.lex_function import lex_function
+from compiler.lexer.lex_reference import lex_reference
+from compiler.lexer.static import ARG_OPEN, ARG_CLOSE, ARG_DELIMITER, LINE_BREAK, EXPR, FUNCTION_TOKEN, REFERENCE_TOKEN, \
     EMPTY_ARGUMENT
-from lexer.lex_global import char
+from compiler.lexer.lex_global import char
 
 
 def arg_strip(string: str) -> str:
@@ -48,7 +48,7 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
             if c == ARG_CLOSE:
                 # Put the end argument name
-                token_list.append((arg_tokens[2], None, char(string[index:])))
+                token_list.append((arg_tokens[2], None, char(string[index + 1:])))
                 break
 
         elif c == EXPR:

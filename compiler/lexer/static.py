@@ -1,4 +1,4 @@
-from lexer.LT import LT
+from compiler.lexer.LT import LT
 
 LINE_BREAK: str = "\n"
 EXPR = '"'
@@ -6,7 +6,7 @@ ARG_OPEN = "("
 ARG_CLOSE = ")"
 ARG_DELIMITER = ","  # For A(1, b)
 SPACE = " "
-PATH_CHARS = "./"  # For paths and files
+PATH_CHARS = "/."  # For paths and files
 EMPTY_ARGUMENT = "_"
 
 # > (e.g. c_ignore)

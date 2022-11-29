@@ -1,8 +1,8 @@
 from typing import List, Tuple, Any, Union
-from lexer.LT import LT
-from lexer.lex_args import lex_args
-from lexer.static import VALID_RULE_LTOKENS, ARG_OPEN
-from lexer.lex_global import char
+from compiler.lexer.LT import LT
+from compiler.lexer.lex_args import lex_args
+from compiler.lexer.static import VALID_RULE_LTOKENS, ARG_OPEN
+from compiler.lexer.lex_global import char
 
 
 def lex_ltoken(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:

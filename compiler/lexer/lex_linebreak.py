@@ -1,7 +1,7 @@
-from lexer.LT import LT
-from lexer.static import LINE_BREAK
+from compiler.lexer.LT import LT
+from compiler.lexer.static import LINE_BREAK
 from typing import List, Tuple, Any, Union
-from lexer.lex_global import char
+from compiler.lexer.lex_global import char
 
 
 def lex_linebreak(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
@@ -15,5 +15,6 @@ def lex_linebreak(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[
         index += 1
         line_breaks += 1
 
-    token_list.append((LT.NEW_LINE, line_breaks, char(string[index:])))
+    # Minus one because line break is the end for rule and statement
+    token_list.append((LT.NEW_LINE, line_breaks, char(string[index - 1:])))
     return index

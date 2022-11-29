@@ -1,5 +1,7 @@
 import sys
-from typing import Tuple, Union
+from typing import Tuple
+
+from colorama import Back, Style
 
 from common.LError import LError
 
@@ -20,5 +22,9 @@ def char(str_left: str):
     return len(Lexer.string) - len(str_left)
 
 
-def throw_error(error: LError, error_position:Tuple[int, int]):
-    pass
+def lraise(error: BaseException, err_pos: Tuple[int, int]):
+    print(repr(error))
+    print(f"{Lexer.string[:err_pos[0]]}"
+          f"{Back.RED}{Lexer.string[err_pos[0]:err_pos[1]]}{Style.RESET_ALL}"
+          f"{Lexer.string[err_pos[1]:]}")
+    exit(0)

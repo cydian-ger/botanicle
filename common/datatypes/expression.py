@@ -4,7 +4,7 @@ from typing import Optional, Dict
 from collections import UserString
 
 from common.LWarning import LWarning
-from lexer.static import ARGV_WARNING
+from compiler.lexer.static import ARGV_WARNING
 
 
 class Expression(UserString):

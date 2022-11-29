@@ -1,8 +1,8 @@
 from typing import List, Tuple, Any, Union
-from lexer.LT import LT
-from lexer.lex_error import LexError
-from lexer.static import EXPR, LINE_BREAK
-from lexer.lex_global import char
+from compiler.lexer.LT import LT
+from compiler.lexer.lex_error import LexError
+from compiler.lexer.static import EXPR, LINE_BREAK
+from compiler.lexer.lex_global import char
 
 
 def lex_expr(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], expr_type=LT.CON_EXPR) -> int:

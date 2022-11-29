@@ -1,6 +1,6 @@
 from typing import List, Any, Dict
-import iterator.functions.func_list as func_list
-from lexer.static import FUNCTION_TOKEN
+import common.iterator.functions.func_list as func_list
+from compiler.lexer.static import FUNCTION_TOKEN
 
 
 def func_type(): pass

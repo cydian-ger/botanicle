@@ -1,8 +1,8 @@
 import sys
 import inspect
-from typing import Optional, Tuple
+from typing import Optional
 
-from lexer.static import ARGV_DEBUG
+from compiler.lexer.static import ARGV_DEBUG
 
 
 class LError(BaseException):

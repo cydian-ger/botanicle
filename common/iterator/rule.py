@@ -1,9 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
-from datatypes import Value_List, Name
-from iterator.LMatch import LMatch
-from lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT, CONDITION_TOKEN, RESULT_TOKEN, ARG_OPEN, \
+from common.datatypes import Value_List, Name
+from common.iterator.LMatch import LMatch
+from compiler.lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT, CONDITION_TOKEN, RESULT_TOKEN, ARG_OPEN, \
     ARG_CLOSE
 
 

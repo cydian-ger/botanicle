@@ -1,12 +1,12 @@
 from typing import List, Tuple, Any, Union
-from lexer.LT import LT
-from lexer.lex_error import LexError
-from lexer.lex_statement import lex_statement
-from lexer.lex_comment import lex_comment
-from lexer.lex_linebreak import lex_linebreak
-from lexer.lex_rule import lex_rule
-from lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
-from lexer.lex_global import char
+from compiler.lexer.LT import LT
+from compiler.lexer.lex_error import LexError
+from compiler.lexer.lex_statement import lex_statement
+from compiler.lexer.lex_comment import lex_comment
+from compiler.lexer.lex_linebreak import lex_linebreak
+from compiler.lexer.lex_rule import lex_rule
+from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
+from compiler.lexer.lex_global import char
 from colorama import Fore, Style, Back
 
 

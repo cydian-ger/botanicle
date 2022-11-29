@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Union
 from dataclasses import dataclass
-from datatypes import Name, Value_List, Expression
-from lexer.static import ARG_OPEN, ARG_CLOSE
+from common.datatypes import Name, Value_List, Expression
+from compiler.lexer.static import ARG_OPEN, ARG_CLOSE
 
 
 @dataclass(frozen=True, slots=True)

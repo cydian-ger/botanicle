@@ -1,10 +1,11 @@
 import sys
-from lexer.LT import LT
+from compiler.lexer.LT import LT
 from compiler.bottle import Bottle
 from typing import List, Tuple, Any
 from common.LWarning import LWarning
-from datatypes import Value_List, Token
-from lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
+from common.datatypes import Value_List, Token
+from compiler.lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
+from compiler.lexer.lex_global import lraise
 
 
 def append(ltk, group_values, name):
@@ -16,31 +17,33 @@ def append(ltk, group_values, name):
                      f" is included multiple times in '{name}: ({', '.join(group_values)})'").throw()
 
 
-def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
+def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
+           bottle: Bottle, parent_token: Tuple[LT, Any, Tuple[int, int]]):
     # Check form
     # group: [name alias value_list[]]
 
     if len(token_list) != 3:
-        raise SyntaxError(f"Ignore takes 3 Argument. {len(token_list)} were provided")
+        lraise(SyntaxError(f"Ignore takes 3 Argument. {len(token_list)} were provided"),
+               parent_token[2])
 
     if not token_list[0][0] == LT.NAME:
-        raise ValueError("First argument has to be a variable name.")
+        lraise(ValueError("First argument has to be a variable name."), token_list[0][2])
 
     if not token_list[1][0] == LT.KEYWORD and token_list[1][1] == KW.alias:
-        raise SyntaxError(f"Second argument has to be {KW.alias}")
+        lraise(SyntaxError(f"Second argument has to be {KW.alias}"), token_list[1][2])
 
     if not token_list[2][0] == LT.ARGS:
-        raise ValueError(f"Third argument has to be an argument list.")
+        lraise(ValueError(f"Third argument has to be an argument list."), token_list[2][2])
 
     for arg in token_list[2][1]:
         if not arg[0] == LT.ARG:
-            raise ValueError("Arguments inside the third argument have to be ARGS type.")
+            lraise(ValueError("Arguments inside the third argument have to be ARGS type."), token_list[2][2])
 
     group_name = Token(token_list[0][1])
 
     # Check if already in group names
     if bottle.token_already_exists(group_name):
-        raise KeyError(f"Group '{group_name}' is already defined.")
+        lraise(KeyError(f"Group '{group_name}' is already defined."), token_list[0][2])
 
     group_values = Value_List()
     group_values.set_type(Token)
@@ -55,8 +58,8 @@ def group(token_list: List[Tuple[LT, Any]], bottle: Bottle):
 
         # If the token is not defined already but is a special axiom
         elif ltoken in SPECIAL_AXIOMS:
-            raise ReferenceError(f"LToken '{ltoken}' is undefined. Since it is a special LToken it has to be "
-                                 f"defined as a capture group to be included.")
+            lraise(ReferenceError(f"LToken '{ltoken}' is undefined. Since it is a special LToken it has to be "
+                                 f"defined as a capture group to be included."), token_list[2][2])
 
         else:
             append(Token(argument[1]), group_values, group_name)

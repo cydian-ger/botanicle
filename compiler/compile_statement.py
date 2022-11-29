@@ -8,11 +8,12 @@ from compiler.statement.expose import expose
 from compiler.statement.ignore import ignore
 from compiler.statement.group import group
 from compiler.statement.include import include
-from lexer.LT import LT
-from lexer.static import KW
+from compiler.lexer.LT import LT
+from compiler.lexer.static import KW
 
 
-def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
+def compile_statement(token_list: List[Tuple[LT, Any, Tuple[int, int]]], bottle: Bottle,
+                      line_token: Tuple[LT, Any, Tuple[int, int]]):
     info: Optional[Dict[str, Any]] = token_list.pop(0)[1]
 
     try:
@@ -25,19 +26,19 @@ def compile_statement(token_list: List[Tuple[LT, Any]], bottle: Bottle):
 
         match statement:
             case KW.define:
-                define(token_list, bottle)
+                define(token_list, bottle, line_token)
 
             case KW.group:
-                group(token_list, bottle)
+                group(token_list, bottle, line_token)
 
             case KW.ignore:
-                ignore(token_list, bottle)
+                ignore(token_list, bottle, line_token)
 
             case KW.expose:
-                expose(token_list, bottle)
+                expose(token_list, bottle, line_token)
 
             case KW.include:
-                include(token_list, bottle)
+                include(token_list, bottle, line_token)
 
             case _:
                 LWarning(f"Keyword '{statement}' not implemented yet.").throw()

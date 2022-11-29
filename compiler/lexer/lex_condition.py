@@ -1,10 +1,10 @@
 import re
 from typing import List, Tuple, Any, Union
-from lexer.LT import LT
-from lexer.lex_args import lex_args
-from lexer.lex_error import LexError
-from lexer.static import RESULT_TOKEN, LINE_BREAK, ARG_OPEN, CONDITION_TOKEN
-from lexer.lex_global import char
+from compiler.lexer.LT import LT
+from compiler.lexer.lex_args import lex_args
+from compiler.lexer.lex_error import LexError
+from compiler.lexer.static import RESULT_TOKEN, LINE_BREAK, ARG_OPEN, CONDITION_TOKEN
+from compiler.lexer.lex_global import char
 
 
 def lex_condition(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:

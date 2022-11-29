@@ -1,37 +1,28 @@
 from typing import List, Tuple, Any, Union
 
 from compiler.bottle import Bottle
-from compiler.compile_error import Compile_Error
 from compiler.compile_rule import compile_rule
 from compiler.compile_statement import compile_statement
-from lexer.LT import LT
-from colorama import Fore, Style
+from compiler.lexer.LT import LT
 
 
 # This compiles a single file
 def l_compile(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]):
     bottle: Bottle = Bottle()
 
-    try:
-        for token, content, token_index in token_list:
-            content: List[Tuple[LT, Any]]
+    for line_token in token_list:
+        token, content, token_index = line_token
+        content: List[Tuple[LT, Any, Tuple[int, int]]]
 
-            match token:
-                case LT.STATEMENT:
-                    compile_statement(content, bottle)
+        match token:
+            case LT.STATEMENT:
+                compile_statement(content, bottle, line_token)
 
-                case LT.RULE:
-                    compile_rule(content, bottle)
+            case LT.RULE:
+                compile_rule(content, bottle, line_token)
 
-                case LT.COMMENT:
-                    # Comments are skipped for now
-                    continue
-
-    except Compile_Error as e:
-        print(f"{Fore.RED}"
-              f"Line {e.info['line_number']}: {repr(e)}"
-              f"{Style.RESET_ALL}"
-              f"\n '{e.info['line_text']}'")
-        exit(1)
+            case LT.COMMENT:
+                # Comments are skipped for now
+                continue
 
     return bottle
