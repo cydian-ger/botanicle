@@ -2,14 +2,13 @@ from typing import List, Tuple, Any, Union
 from compiler.lexer.LT import LT
 from compiler.lexer.lex_args import lex_args
 from compiler.lexer.lex_assignment import lex_assignment
-from compiler.lexer.lex_error import LexError
 from compiler.lexer.lex_function import lex_function
 from compiler.lexer.lex_linebreak import lex_linebreak
 from compiler.lexer.lex_ltoken import lex_ltoken
 from compiler.lexer.lex_condition import lex_condition
 from compiler.lexer.static import VALID_RULE_LTOKENS, CONTEXT_TOKENS, CONDITION_TOKEN, RESULT_TOKEN, LINE_BREAK, \
     ASSIGNMENT_TOKEN, FUNCTION_TOKEN, ARG_OPEN
-from compiler.Lglobal import char
+from compiler.Lglobal import char, lraise
 
 
 def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
@@ -25,8 +24,8 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         elif c == ASSIGNMENT_TOKEN:
             if index > 0:
-                raise LexError(f"Assignment operator '{ASSIGNMENT_TOKEN}' must be at the start of a line",
-                               string[index:], SyntaxError)
+                lraise(SyntaxError(f"Assignment operator '{ASSIGNMENT_TOKEN}' must be at the start of a line"),
+                       char(string[index:]))
             else:
                 index += lex_assignment(string[index:], token_list)
 
@@ -46,14 +45,14 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         elif c == CONDITION_TOKEN:
             if condition_token:
-                raise LexError("Condition token can not appear more than once in a rule", string[index:], SyntaxError)
+                lraise(SyntaxError("Condition token can not appear more than once in a rule"), char(string[index:]))
             condition_token = True
 
             index += lex_condition(string[index:], token_list)
 
         elif c == RESULT_TOKEN:
             if result_token:
-                raise LexError("Result token can not appear more than once in a rule.", string[index:], SyntaxError)
+                lraise(SyntaxError("Result token can not appear more than once in a rule."), char(string[index:]))
             result_token = True
 
             token_list.append((LT.RESULT, None, char(string[index:])))
@@ -72,7 +71,6 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
             index += 1
 
         else:
-            raise LexError(f"Character '{c}' is not a valid LToken / rule component.",
-                           string[index:], SyntaxError)
+            lraise(SyntaxError(f"Character '{c}' is not a valid LToken / rule component."), char(string[index:]))
 
     return index

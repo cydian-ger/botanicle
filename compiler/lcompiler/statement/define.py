@@ -1,5 +1,5 @@
 from typing import List, Tuple, Any
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from common.datatypes import Value
 from compiler.lexer.LT import LT
 from compiler.lexer.static import KW

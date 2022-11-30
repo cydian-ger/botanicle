@@ -1,5 +1,5 @@
 from typing import List, Tuple, Any
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from common.datatypes import Value_List, Token
 from compiler.lexer.LT import LT
 from compiler.Lglobal import lraise
@@ -19,8 +19,8 @@ def ignore(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     ignore_list = Value_List()
     ignore_list.set_type(Token)
 
-    for _, ltoken, __ in token_list[0][1]:
-        ignore_list.append(Token(ltoken))
+    for _, ltoken, ltoken_index in token_list[0][1]:
+        ignore_list.append(Token(ltoken, ltoken_index))
 
     if not not bottle.context_ignore:
         lraise(NameError(f"Ignore can not be defined twice."), parent_token[2])

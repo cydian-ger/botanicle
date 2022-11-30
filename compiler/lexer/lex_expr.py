@@ -1,8 +1,7 @@
 from typing import List, Tuple, Any, Union
 from compiler.lexer.LT import LT
-from compiler.lexer.lex_error import LexError
 from compiler.lexer.static import EXPR, LINE_BREAK
-from compiler.Lglobal import char
+from compiler.Lglobal import char, lraise
 
 
 def lex_expr(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], expr_type=LT.CON_EXPR) -> int:
@@ -17,7 +16,7 @@ def lex_expr(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
             break
 
         elif c == LINE_BREAK:
-            raise LexError("Line break occured before closing of expression", string[index:], SyntaxError)
+            lraise(SyntaxError("Line break occured before closing of expression"), char(string[index:]))
 
         expr += c
         index += 1

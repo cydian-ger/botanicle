@@ -47,6 +47,8 @@ def load_function(function_name: str, function_args: List[Any], expected_return_
 if __name__ == '__main__':
     args = [1.0, 10.0, 1]
     print(load_function("seed", args, float)(*args))
+    # Uppercase function refers to object e.g. $TTL_X = turtle_x coordinate
+    # Lowercase function refers to function $seed = random seed
     # The function should be an object that can be returned when its loaded
     #
     # MATCH

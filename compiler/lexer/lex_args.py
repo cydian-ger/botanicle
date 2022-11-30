@@ -1,7 +1,6 @@
 from compiler.lexer.LT import LT
 from typing import List, Tuple, Any, Union
 
-from compiler.lexer.lex_error import LexError
 from compiler.lexer.lex_expr import lex_expr
 from compiler.lexer.lex_function import lex_function
 from compiler.lexer.lex_reference import lex_reference
@@ -39,12 +38,13 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
             if arg != "":
                 if arg == EMPTY_ARGUMENT:
-                    token_list.append((arg_tokens[1], "", char(string[index:])))
+                    _i = char(string[index:])
+                    token_list.append((arg_tokens[1], "", (_i - 1, _i)))
 
                 else:
                     # Put the argument
                     token_list.append((arg_tokens[1], arg, char(string[index:])))
-                    arg = ""
+                arg = ""
 
             if c == ARG_CLOSE:
                 # Put the end argument name
@@ -57,7 +57,7 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
         elif c == FUNCTION_TOKEN:
             if arg_strip(arg) != "":
                 lraise(SyntaxError(f"Function token '{FUNCTION_TOKEN} has to be the first character of the argument.")
-                               , char(string[index:]))
+                       , char(string[index:]))
 
             index += lex_function(string[index:], token_list)
             continue
@@ -66,8 +66,8 @@ def lex_args(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         elif c == REFERENCE_TOKEN:
             if arg_strip(arg) != "":
-                raise LexError(f"Reference token '{REFERENCE_TOKEN} has to be the first character of the argument."
-                               , string[index:], SyntaxError)
+                lraise(SyntaxError(f"Reference token '{REFERENCE_TOKEN} has to be the first character of the argument.")
+                       , char(string[index:]))
 
             index += lex_reference(string[index:], token_list)
             continue

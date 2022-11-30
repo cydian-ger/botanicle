@@ -70,7 +70,7 @@ class Rule:
                 out_str += f"{self.condition[0]} "
             else:
                 out_str += f"{ARG_OPEN}" \
-                           f"{' '.join([str(con) for con in self.condition])}" \
+                           f"{', '.join([str(con) for con in self.condition])}" \
                            f"{ARG_CLOSE} "
 
         out_str += f"{RESULT_TOKEN} "

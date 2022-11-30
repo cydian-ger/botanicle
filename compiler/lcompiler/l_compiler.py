@@ -1,8 +1,8 @@
 from typing import List, Tuple, Any, Union
 
-from compiler.bottle import Bottle
-from compiler.compile_rule import compile_rule
-from compiler.compile_statement import compile_statement
+from compiler.lcompiler.bottle import Bottle
+from compiler.lcompiler.compile_rule import compile_rule
+from compiler.lcompiler.compile_statement import compile_statement
 from compiler.lexer.LT import LT
 
 

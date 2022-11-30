@@ -1,7 +1,7 @@
 import sys
 
-from compiler.Lglobal import init_compiler
-from compiler.l_compiler import l_compile
+from compiler.Lglobal import init_compiler, lwarn
+from compiler.lcompiler.l_compiler import l_compile
 from compiler.lexer.lex import lex
 from compiler.lexer.static import ARGV_DEBUG, ARGV_WARNING
 from compiler.lexer.token_compactor import token_compactor
@@ -24,5 +24,3 @@ if __name__ == '__main__':
     # pprint(_compacted_tokens, width=120)
     bottle = l_compile(_compacted_tokens)
     pprint(bottle)
-
-    # TODO

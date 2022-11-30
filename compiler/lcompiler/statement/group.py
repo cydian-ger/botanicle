@@ -1,6 +1,6 @@
 import sys
 from compiler.lexer.LT import LT
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from typing import List, Tuple, Any
 from common.LWarning import LWarning
 from common.datatypes import Value_List, Token
@@ -18,7 +18,7 @@ def append(ltk, group_values, name):
 
 
 def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
-           bottle: Bottle, parent_token: Tuple[LT, Any, Tuple[int, int]]):
+          bottle: Bottle, parent_token: Tuple[LT, Any, Tuple[int, int]]):
     # Check form
     # group: [name alias value_list[]]
 
@@ -37,9 +37,10 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
 
     for arg in token_list[2][1]:
         if not arg[0] == LT.ARG:
-            lraise(ValueError("Arguments inside the third argument have to be ARGS type."), token_list[2][2])
+            lraise(ValueError(f"Arguments inside the third argument have to be ARGS type. "
+                              f"Argument '{arg[1]}' was '{arg[0]}' instead."), arg[2])
 
-    group_name = Token(token_list[0][1])
+    group_name = Token(token_list[0][1], token_list[0][2])
 
     # Check if already in group names
     if bottle.token_already_exists(group_name):
@@ -49,27 +50,28 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     group_values.set_type(Token)
 
     for argument in token_list[2][1]:
-        ltoken = Token(argument[1])
+        ltoken = Token(argument[1], token_list[2][2])
 
         # If the l token is already a
-        if ltoken in bottle.match_groups:
+        if str(ltoken) in bottle.match_groups:
             for bottle_ltoken in bottle.match_groups[ltoken]:
                 append(bottle_ltoken, group_values, group_name)
 
         # If the token is not defined already but is a special axiom
-        elif ltoken in SPECIAL_AXIOMS:
+        elif str(ltoken) in SPECIAL_AXIOMS:
             lraise(ReferenceError(f"LToken '{ltoken}' is undefined. Since it is a special LToken it has to be "
-                                 f"defined as a capture group to be included."), token_list[2][2])
+                                  f"defined as a capture group to be included."), token_list[2][2])
 
         else:
-            append(Token(argument[1]), group_values, group_name)
+            append(Token(argument[1], token_list[2][2]), group_values, group_name)
 
     # Warn if the group_values are already in the bottle under a different name
     if sys.argv.__contains__(ARGV_WARNING):
         for name, values in bottle.match_groups.items():
             if values == group_values:
-                LWarning(f"Group '{group_name}: ({', '.join(group_values)})' is already in the bottle: "
-                         f"''{name}: ({', '.join(values)})''").throw()
+                LWarning(f"Group '{group_name}: ({', '.join([str(g_value) for g_value in group_values])})"
+                         f"' is already in the bottle: "
+                         f"'{name}: ({', '.join([str(value) for value in values])})'").throw()
 
     bottle.match_groups[group_name] = group_values
 

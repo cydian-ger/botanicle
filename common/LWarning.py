@@ -13,7 +13,7 @@ class LWarning:
         self.warning = warning
 
         if caller is None:
-            _caller = inspect.getouterframes(inspect.currentframe(), 3)[2]  # [2] Because this is base class
+            _caller = inspect.getouterframes(inspect.currentframe(), 3)[1]  # [2] Because this is base class
             self.caller_name = _caller[3]
             self.caller_line = _caller[2]
         else:

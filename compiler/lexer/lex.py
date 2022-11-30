@@ -27,7 +27,7 @@ def lex(string: str):
 
         elif c in VALID_STATEMENT_CHARACTERS:
             token_list.append((LT.STATEMENT, None, char(string[index:])))
-            _line_info(string, index, token_list)
+            # _line_info(string, index, token_list)
             index += lex_statement(string[index:], token_list)
 
         elif c == "#":
@@ -35,7 +35,7 @@ def lex(string: str):
 
         elif c in VALID_RULE_START:
             token_list.append((LT.RULE, None, char(string[index:])))
-            _line_info(string, index, token_list)
+            # _line_info(string, index, token_list)
             index += lex_rule(string[index:], token_list)
 
         else:

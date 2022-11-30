@@ -50,7 +50,11 @@ def _token_compactor(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]
                     if token in {LT.ASSIGNMENT, LT.FUNCTION, LT.REFERENCE}:
                         length += 1
 
-                    out_list.append((token, value, (char_index - length, char_index)))
+                    # If a token is known to have a defined length and its already saved -> "_"
+                    if isinstance(char_index, tuple):
+                        out_list.append((token, value, char_index))
+                    else:
+                        out_list.append((token, value, (char_index - length, char_index)))
 
         index += 1
 

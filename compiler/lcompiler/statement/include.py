@@ -1,5 +1,5 @@
 from typing import List, Tuple, Any
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from common.datatypes import Token, Name
 from compiler.lexer.LT import LT
 from compiler.lexer.static import KW
@@ -23,8 +23,8 @@ def include(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     if not token_list[2][0] == LT.NAME:
         lraise(ValueError(f"Third argument has to be a token"), token_list[2][2])
 
-    path = Name(token_list[0][1])
-    ltoken = Token(token_list[2][1])
+    path = Name(token_list[0][1], token_list[0][2])
+    ltoken = Token(token_list[2][1], token_list[2][2])
 
     if bottle.token_already_exists(ltoken):
         lraise(KeyError(f"LToken already defined"), token_list[2][2])

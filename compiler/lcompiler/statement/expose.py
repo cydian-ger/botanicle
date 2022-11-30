@@ -1,5 +1,5 @@
 from typing import List, Tuple, Any
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from common.datatypes import Value_List, Name, Expression
 from compiler.lexer.LT import LT
 from compiler.lexer.static import KW
@@ -22,7 +22,7 @@ def expose(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     value_list.set_type(Name)
 
     for argument in token_list[0][1]:
-        name = Name(argument[1])
+        name = Name(argument[1], token_list[0][2])
         value_list.append(name)
 
     if bottle.frame.exposed_variables is not None:
@@ -43,7 +43,7 @@ def expose(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     condition_list.set_type(Expression)
 
     for argument in token_list[2][1]:
-        expr = Expression(argument[1])
+        expr = Expression(argument[1], token_list[2][2])
         condition_list.append(expr)
 
     if bottle.frame.exposing_conditions is not None:

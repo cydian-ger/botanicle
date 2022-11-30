@@ -1,6 +1,6 @@
 from typing import List, Optional, Union, Dict, Tuple, Any
 
-from compiler.bottle import Bottle
+from compiler.lcompiler.bottle import Bottle
 from common.datatypes import Name, Value_List, Expression
 from common.iterator.LMatch import LMatch
 from common.iterator.rule import Rule
@@ -18,13 +18,13 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
         if arg_t == LT.ARG or arg_t == LT.EXPR:
 
             if ac_kwargs:
-                token_args.append(argument_class(arg_v, **ac_kwargs))
+                token_args.append(argument_class(arg_v, arg_i, **ac_kwargs))
             else:
-                token_args.append(argument_class(arg_v))
+                token_args.append(argument_class(arg_v, arg_i))
 
         elif arg_t == LT.FUNCTION:
             # Load function
-            raise NotImplementedError("Functions as arguments in LTokens are not supported yet")
+            lraise(NotImplementedError("Functions as arguments in LTokens are not supported yet"), arg_i)
 
         else:
             lraise(SyntaxError(f"Invalid Argument Type for Token: {arg_t}."), arg_i)
@@ -32,8 +32,8 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
     return LMatch(token_name, token_args)
 
 
-def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle,
-                  line_token: Tuple[LT, Any, Tuple[int, int]]):
+def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle,
+                 line_token: Tuple[LT, Any, Tuple[int, int]]):
     name: Optional[Name] = None
     for token, content, token_index in token_list:
         if token not in {LT.ASSIGNMENT, LT.LTOKEN, LT.ARGS, LT.CONTEXT_TOKEN, LT.CONDITION, LT.RESULT,
@@ -41,7 +41,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
             lraise(SyntaxError(f"{token} is not an allowed Token in a Rule"), token_index)
 
         if token is LT.ASSIGNMENT:
-            name = Name(content)
+            name = Name(content, token_index)
 
     if name is not None:
         if name in bottle.rule_assignments:
@@ -94,7 +94,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
 
         elif token == LT.FUNCTION:
             # Use same function as above
-            raise NotImplementedError("functions outside of arguments not supported yet")
+            lraise(NotImplementedError("Function as LToken are not supported yet"), token_index)
 
         # Take the condition
         elif token == LT.CONDITION and content != []:
@@ -104,11 +104,14 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
             condition.set_type(Expression)
 
             if con_token == LT.CON_EXPR:
-                condition.append(Expression(con_content, result_type=bool))
+                condition.append(Expression(con_content, con_index, result_type=bool))
 
             elif con_token == LT.ARGS:
                 for con_arg in con_content:
-                    condition.append(Expression(con_arg[1], result_type=bool))
+                    condition.append(Expression(con_arg[1], con_index, result_type=bool))
+
+            elif con_token == LT.FUNCTION:
+                lraise(NotImplementedError("Function is not implemented for condition argument."), con_index)
 
         elif token == LT.RESULT:
             # Unpack the result token into the result
@@ -137,7 +140,7 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
         match_list = match_list[:_index]
 
     if len(match_list) != 1:
-        raise SyntaxError(f"Rule has to have 1 match. Received {len(match_list)} instead.")
+        lraise(SyntaxError(f"Rule has to have 1 match. Received {len(match_list)} instead."), line_token[2])
 
     rule = Rule(
         match=match_list[0],
@@ -149,28 +152,11 @@ def _compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]],
     )
 
     if rule in bottle.rule_list:
-        raise SyntaxError(f"There already exists a rule with equivalent match for the rule: '{rule}'")
+        lraise(SyntaxError(f"There already exists a rule with equivalent match for the rule: '{rule}'"), line_token[2])
 
     for variable in rule.variables:
         if variable in bottle.variables.keys():
-            raise KeyError(f"Match Variable '{variable}' overrides defined variable.")
+            lraise(KeyError(f"Match Variable '{variable}' overrides defined variable."), line_token[2])
 
     bottle.rule_list.append(rule)
     # bottle.rule
-
-
-def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], bottle: Bottle,
-                 line_token: Tuple[LT, Any, Tuple[int, int]]):
-    info = token_list.pop(0)[1]
-
-    _compile_rule(token_list, bottle, line_token)
-    """
-    except Compile_Error as e:
-        raise e
-    
-    except Exception as e:
-        if len(e.args) > 0:
-            raise Compile_Error(e.args[0], info, e)
-    
-        else:
-            raise Compile_Error("ERROR MSG MISSING", info, e)"""

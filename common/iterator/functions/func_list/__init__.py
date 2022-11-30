@@ -1,3 +1,3 @@
 __all__ = ['seed']
 
-from .seed import seed
+from .lfunc import seed
