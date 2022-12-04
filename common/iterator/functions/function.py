@@ -1,59 +1,34 @@
-from typing import List, Any, Dict
-import common.iterator.functions.func_list as func_list
-from compiler.lexer.static import FUNCTION_TOKEN
+from typing import List, Any
+from common.iterator.functions.load_function import _load_function
+from common.iterator.functions.load_object import _load_object
 
 
-def func_type(): pass
-
-
-def _get_type(func: type(func_type)) -> type:
-    _type = func.__annotations__.get('return', None)
-
-    # If its part of the typing Library
-    if _type.__dict__.get('__origin__', False):
-        _type = _type.__origin__
-
-    return _type
-
-
-def load_function(function_name: str, function_args: List[Any], expected_return_type: type):
-    if function_name not in [func for func in dir(func_list) if not func.startswith("__")]:
-        raise ModuleNotFoundError(f"There is no function named {FUNCTION_TOKEN}{function_name}")
-
-    func = getattr(func_list, function_name)
-
-    if _get_type(func) != expected_return_type:
-        raise TypeError(f"Function {FUNCTION_TOKEN}{function_name} returns type '{_get_type(func).__name__}' "
-                        f"but should return type '{expected_return_type.__name__}' instead.")
-
-    # This seems to be always ordered
-    types: Dict[Any, type] = func.__annotations__
-    types.pop('return')
-    types: List[type] = [v for k, v in types.items()]
-
-    if len(types) != len(function_args):
-        raise ValueError(f"Function {FUNCTION_TOKEN}{function_name} takes {len(types)} arguments but "
-                         f"{len(function_args)} was provided")
-
-    for index, _arg in enumerate(zip(function_args, types)):
-        arg, arg_expected_type = _arg
-        if type(arg) != arg_expected_type:
-            raise TypeError(f"Function {FUNCTION_TOKEN}{function_name} expects '{arg_expected_type}' as {index + 1}."
-                            f" argument but got {type(arg)} instead.")
-
-    return func
+def load_call(function_name: str, function_args: List[Any], expected_return_type: type, token_index):
+    if function_name[0].islower():
+        return _load_function(function_name, function_args, expected_return_type, token_index)
+    else:
+        return _load_object(function_name, function_args, expected_return_type, token_index)
 
 
 if __name__ == '__main__':
+    from compiler.Lglobal import init_compiler
+
+    init_compiler("test")
+
+    print(load_call("test", [1.0], float, 0))
+
     args = [1.0, 10.0, 1]
-    print(load_function("seed", args, float)(*args))
+    print(load_call("seed", args, float, 0)(*args))
+
     # Uppercase function refers to object e.g. $TTL_X = turtle_x coordinate
     # Lowercase function refers to function $seed = random seed
     # The function should be an object that can be returned when its loaded
+    # A function is always only called during production and can never turn into a token.
     #
     # MATCH
     # Function in the match. $function(Argument) -> LMatch
-    # Function in the match Arguments A($function) -> Not accepted because it should be
+    # Function in the match Arguments A($function) -> Not accepted because an argument name does not change
+    #       after compile so having a function there does not make sense
     #
     # CONDITION
     # Function instead of expression -> : ("a", $function("a")) -> bool value
@@ -61,4 +36,10 @@ if __name__ == '__main__':
     #
     # RESULT
     # Function as result -> -> $function("a") -> LToken / LResult or something
-    # Function as result argument -> A($function(1)) -> float
+    # Function as result argument -> A($function(1)) -> floats
+    # Function inside of result expression A("$seed() + 1")
+    #
+    # MAYBE have statement functions like:
+    # define z as "1 + (0.1 * $IT.i())"
+    # This starts at 0.1 but grows by 0.2 every new iteration.
+    # sth like that.

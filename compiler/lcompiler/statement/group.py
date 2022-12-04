@@ -5,16 +5,17 @@ from typing import List, Tuple, Any
 from common.LWarning import LWarning
 from common.datatypes import Value_List, Token
 from compiler.lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
-from compiler.Lglobal import lraise
+from compiler.Lglobal import lraise, lwarn
 
 
-def append(ltk, group_values, name):
+def append(ltk, group_values, name, token):
     if ltk not in group_values:
         group_values.append(ltk)
     else:
         if sys.argv.__contains__(ARGV_WARNING):
-            LWarning(f"Argument '{ltk}'"
-                     f" is included multiple times in '{name}: ({', '.join(group_values)})'").throw()
+            lwarn(SyntaxWarning(f"Argument '{ltk}'"
+                                f" is included multiple times in '{name}: "
+                                f"({', '.join([str(t_arg[1]) for t_arg in token])})'"))
 
 
 def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
@@ -55,7 +56,7 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
         # If the l token is already a
         if str(ltoken) in bottle.match_groups:
             for bottle_ltoken in bottle.match_groups[ltoken]:
-                append(bottle_ltoken, group_values, group_name)
+                append(bottle_ltoken, group_values, group_name, token_list[2][1])
 
         # If the token is not defined already but is a special axiom
         elif str(ltoken) in SPECIAL_AXIOMS:
@@ -63,7 +64,7 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
                                   f"defined as a capture group to be included."), token_list[2][2])
 
         else:
-            append(Token(argument[1], token_list[2][2]), group_values, group_name)
+            append(Token(argument[1], token_list[2][2]), group_values, group_name, token_list[2][1])
 
     # Warn if the group_values are already in the bottle under a different name
     if sys.argv.__contains__(ARGV_WARNING):

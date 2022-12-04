@@ -1,15 +1,14 @@
-import inspect
 import sys
 from typing import Union, Tuple
-import os
 
 from compiler.Lglobal import Compiler
+from compiler.Lglobal.ltrace import ltrace
 from compiler.lexer.static import LINE_BREAK, ARGV_DEBUG
 
 from colorama import Fore, Back, Style
 
 
-def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]]):
+def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_info: str = ""):
     if isinstance(err_pos, int):
         err_pos = (err_pos, err_pos + 1)
 
@@ -39,10 +38,9 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]]):
     print(f"Line {fault_line_index + 1}: " + repr(error))
 
     if sys.argv.__contains__(ARGV_DEBUG):
-        _caller = inspect.getouterframes(inspect.currentframe(), 3)[1]
-        # [2] Because this is a removed function
-        print(f"-debug <error_origin>: "
-              f"{os.path.basename(_caller[1])} {_caller[3]}(): Line {_caller[2]}")
+        if debug_info:
+            print(debug_info)
+        print(ltrace())
 
     fault_line_name = f"{fault_line_index + 1}: "
     print("─" * (len(fault_line) + len(fault_line_name)))

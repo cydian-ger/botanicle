@@ -1,16 +1,25 @@
 import ast
 import sys
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any, Tuple
 from collections import UserString
 
+from common.iterator.functions.function import load_call
 from compiler.lexer.static import ARGV_WARNING
 from compiler.Lglobal import lraise, lwarn
 
 
+# This class just gets attributes added to it
+class Shell:
+    pass
+
+
 class Expression(UserString):
     variables: List[str]
+    functions: Dict[str, Any]
+    objects: Dict[Tuple[str, str], Any]
 
     def __init__(self, string: str, token_index, result_type: Optional[type] = None):
+        # This checks if an expression is valid
         super().__init__(string)
 
         root = None
@@ -23,10 +32,41 @@ class Expression(UserString):
         except SyntaxError:
             lraise(SyntaxError(f"String '{string}' is not a valid python expression."), token_index)
 
-        variables: Dict[str, int] = {node.id: 1 for node in ast.walk(root) if isinstance(node, ast.Name)}
+        # Get all variable assignment names
+        var_list = [node.id for node in ast.walk(root) if isinstance(node, ast.Name)]
 
+        # Function names and object calls
+        function_calls = [(node.func.id, node.args) for node in ast.walk(root) if isinstance(node, ast.Call)]
+        object_calls = [(node.value.id, node.attr) for node in ast.walk(root) if isinstance(node, ast.Attribute)]
+
+        # Load all functions
+        function_names = [name for name, args in function_calls]
+        # Load all Objects
+        object_names = [name for name, attr in object_calls]
+
+        # TODO
+        # Check if variable is defined twice
+
+        # Load a dummy value into every variable and leave out every function call and object
+        variables: Dict[str, int] = {v: 1 for v in var_list if not (v in function_names or v in object_names)}
+
+        # Load all the variable names
         self.variables = list(variables.keys())
 
+        # Load all the functions to see if they are valid
+        self.functions = dict()
+        # Store the functions for later calls
+        for function, function_args in function_calls:
+            self.functions[function] = load_call(function, [ast.literal_eval(fa) for fa in function_args],
+                                                 result_type, token_index)
+
+        # Load all the object attribute calls and check if they are valid
+        self.objects = dict()
+        for obj, attr in object_calls:
+            self.objects[(obj, attr)] = load_call(f"{obj}.{attr}", [], result_type, token_index)
+
+
+        # Style guide
         if sys.argv.__contains__(ARGV_WARNING):
             ugly_vars = [variable for variable in variables if variable.lower() != variable]
             if len(ugly_vars) > 0:
@@ -36,7 +76,29 @@ class Expression(UserString):
         try:
             if result_type:
                 try:
-                    result = eval(string, None, variables)
+                    # Load test variables
+                    test_vars: Dict[str, Any] = {v: 1 for v in self.variables if v}
+
+                    # Load shell test objects
+                    _objects: Dict[str, Shell] = dict()
+                    for obj, attr in self.objects.keys():
+                        if obj in _objects:
+                            _objects[obj].__setattr__(attr, 1)
+                        else:
+                            shell = Shell()
+                            shell.__setattr__(attr, 1)
+                            _objects[obj] = shell
+                    test_vars.update(**_objects)
+
+                    # Load test functions
+                    _functions: Dict[str, Any] = dict()
+                    for func in self.functions:
+                        _functions[func] = lambda *x: 1
+
+                    test_vars.update(**_functions)
+
+                    # Check
+                    result = eval(string, None, test_vars)
 
                 except ZeroDivisionError:  # Assume that if you divide by 0 the result would be 0
                     # Since the result of division is most likely a float.
@@ -47,6 +109,5 @@ class Expression(UserString):
                                      f"rather '{type(result).__name__}' type."), token_index)
 
         except SyntaxError as e:
-            print(repr(e))
             lraise(SyntaxError(f"String '{string}' is not a valid expression as it does not result in a {result_type}.")
                    , token_index)

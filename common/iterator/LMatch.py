@@ -17,7 +17,6 @@ class LMatch:
 
         if args[0] != self.name:
             return False
-
         return True
 
     @property

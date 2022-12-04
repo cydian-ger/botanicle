@@ -1,6 +1,7 @@
 from typing import List, Tuple, Any, Union
 from compiler.lexer.LT import LT
-from compiler.lexer.static import SPACE, LINE_BREAK, ARG_OPEN, FUNCTION_TOKEN, ARG_CLOSE, ARG_DELIMITER
+from compiler.lexer.static import SPACE, LINE_BREAK, ARG_OPEN, FUNCTION_TOKEN, ARG_CLOSE, ARG_DELIMITER, \
+    FUNCTION_EXTRA_TOKEN
 from compiler.Lglobal import char, lraise
 
 
@@ -28,7 +29,7 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[i
                        char(string[index:]))
 
         else:
-            if not c.isalnum():
+            if not c.isalnum() and c not in FUNCTION_EXTRA_TOKEN:
                 lraise(SyntaxError(f"The Character '{c}' is not allowed in a function name."), char(string[index:]))
             func += c
 

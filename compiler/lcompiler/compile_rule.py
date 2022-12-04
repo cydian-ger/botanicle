@@ -16,7 +16,6 @@ def _compile_lmatch(name, args, argument_class: Union[type(Name), type(Expressio
     # Add every argument
     for arg_t, arg_v, arg_i in args:
         if arg_t == LT.ARG or arg_t == LT.EXPR:
-
             if ac_kwargs:
                 token_args.append(argument_class(arg_v, arg_i, **ac_kwargs))
             else:
