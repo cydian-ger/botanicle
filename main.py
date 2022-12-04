@@ -6,6 +6,7 @@ from compiler.lexer.lex import lex
 from compiler.lexer.static import ARGV_DEBUG, ARGV_WARNING
 from compiler.lexer.token_compactor import token_compactor
 
+
 if __name__ == '__main__':
     from pprint import pprint
 

@@ -7,8 +7,12 @@ from compiler.lexer.static import FUNCTION_TOKEN
 def func_type(): pass
 
 
+def func_signature(name: str, func: type(func_type())) -> str:
+    return f"${name}({', '.join([f'{k}: {v.__name__}' for k, v in func.__annotations__.items()])})"
+
+
 def _get_type(func: type(func_type)) -> type:
-    # Get the type of a function
+    # Get the type of function
     _type = func.__annotations__.get('return', None)
 
     if _type is None:

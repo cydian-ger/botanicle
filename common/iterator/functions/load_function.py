@@ -1,7 +1,7 @@
 from typing import List, Any, Dict
 
 from common.iterator.functions import func_list as func_list
-from common.iterator.functions.func_util import _check_expected_type
+from common.iterator.functions.func_util import _check_expected_type, func_signature
 from compiler.Lglobal import lraise
 from compiler.lexer.static import FUNCTION_TOKEN
 
@@ -21,7 +21,8 @@ def _load_function(function_name: str, function_args: List[Any], expected_return
 
     if len(types) != len(function_args):
         lraise(ValueError(f"Function {FUNCTION_TOKEN}{function_name} takes {len(types)} arguments but "
-                          f"{len(function_args)} was provided"), token_index)
+                          f"{len(function_args)} was provided."
+                          f" <{func_signature(function_name, func)}>"), token_index)
 
     for index, _arg in enumerate(zip(function_args, types)):
         arg, arg_expected_type = _arg

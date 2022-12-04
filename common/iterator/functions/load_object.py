@@ -14,11 +14,12 @@ def _load_object(call_name: str, function_args: List[Any], expected_return_type:
     object_name, object_attribute = call_name.split(FUNCTION_EXTRA_TOKEN)
 
     # No arguments allowed
-    # TODO: check for function args.
+    if function_args:
+        lraise(ValueError(f"Object {call_name} attribute does not take arguments"), token_index)
 
     # Check if the object exists
     if object_name not in [obj for obj in dir(func_list) if not obj.startswith("__")]:
-        lraise(ModuleNotFoundError(f"There is no function named {FUNCTION_TOKEN}{call_name}"), token_index)
+        lraise(ModuleNotFoundError(f"There is no object named {FUNCTION_TOKEN}{call_name}"), token_index)
 
     cls = getattr(func_list, object_name)
 

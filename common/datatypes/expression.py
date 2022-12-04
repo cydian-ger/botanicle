@@ -36,13 +36,20 @@ class Expression(UserString):
         var_list = [node.id for node in ast.walk(root) if isinstance(node, ast.Name)]
 
         # Function names and object calls
-        function_calls = [(node.func.id, node.args) for node in ast.walk(root) if isinstance(node, ast.Call)]
-        object_calls = [(node.value.id, node.attr) for node in ast.walk(root) if isinstance(node, ast.Attribute)]
+        try:
+            function_calls = [(node.func.id, node.args, node) for
+                              node in ast.walk(root) if isinstance(node, ast.Call)]
+
+            object_calls = [(node.value.id, node.attr, node)
+                            for node in ast.walk(root) if isinstance(node, ast.Attribute)]
+
+        except Exception as e:
+            lraise(SyntaxError(f"Uncaught error during Expression: {str(e)}"), token_index)
 
         # Load all functions
-        function_names = [name for name, args in function_calls]
+        function_names = [name for name, args, node in function_calls]
         # Load all Objects
-        object_names = [name for name, attr in object_calls]
+        object_names = [name for name, attr, node in object_calls]
 
         # TODO
         # Check if variable is defined twice
@@ -56,15 +63,18 @@ class Expression(UserString):
         # Load all the functions to see if they are valid
         self.functions = dict()
         # Store the functions for later calls
-        for function, function_args in function_calls:
+        for function, function_args, node in function_calls:
             self.functions[function] = load_call(function, [ast.literal_eval(fa) for fa in function_args],
-                                                 result_type, token_index)
+                                                 result_type,
+                                                 (token_index[0] + node.col_offset,
+                                                  token_index[0] + node.end_col_offset))
 
         # Load all the object attribute calls and check if they are valid
         self.objects = dict()
-        for obj, attr in object_calls:
-            self.objects[(obj, attr)] = load_call(f"{obj}.{attr}", [], result_type, token_index)
-
+        for obj, attr, node in object_calls:
+            self.objects[(obj, attr)] = load_call(f"{obj}.{attr}", [], result_type,
+                                                  (token_index[0] + node.col_offset,
+                                                   token_index[0] + node.end_col_offset))
 
         # Style guide
         if sys.argv.__contains__(ARGV_WARNING):
