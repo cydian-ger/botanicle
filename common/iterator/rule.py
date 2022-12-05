@@ -31,7 +31,6 @@ class Rule:
                     self.variables.append(var_name)
 
     def __eq__(self, other: Rule) -> bool:
-
         if self.match != other.match:
             return False
 

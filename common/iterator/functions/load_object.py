@@ -9,7 +9,8 @@ from compiler.lexer.static import FUNCTION_EXTRA_TOKEN, FUNCTION_TOKEN
 def _load_object(call_name: str, function_args: List[Any], expected_return_type: type, token_index):
     # If the naming scheme is not correct
     if call_name.count(FUNCTION_EXTRA_TOKEN) != 1:
-        raise SyntaxError()
+        lraise(SyntaxError(f"Received object call with invalid Syntax. Correct syntax: 'OBJECT.Attribute'. "
+                           f"Received '{call_name}' instead."), token_index)
 
     object_name, object_attribute = call_name.split(FUNCTION_EXTRA_TOKEN)
 

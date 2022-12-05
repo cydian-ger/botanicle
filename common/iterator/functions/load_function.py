@@ -27,7 +27,7 @@ def _load_function(function_name: str, function_args: List[Any], expected_return
     for index, _arg in enumerate(zip(function_args, types)):
         arg, arg_expected_type = _arg
         if type(arg) != arg_expected_type:
-            lraise(TypeError(f"Function {FUNCTION_TOKEN}{function_name} expects '{arg_expected_type}' as {index + 1}."
-                             f" argument but got {type(arg)} instead."), token_index)
+            lraise(TypeError(f"Function {FUNCTION_TOKEN}{function_name} expects <{arg_expected_type.__name__}>"
+                             f" as {index + 1}. argument but got <{type(arg).__name__}> instead."), token_index)
 
     return func

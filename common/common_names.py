@@ -1,0 +1,2 @@
+EDITOR_FORMAT = ".l"
+COMPILED_FORMAT = ".bud"
