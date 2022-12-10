@@ -1,4 +1,4 @@
-from typing import Dict, Set, Optional, List
+from typing import Dict, Set, Optional, List, Tuple, Any
 from common.datatypes import *
 from dataclasses import dataclass
 
@@ -20,6 +20,7 @@ class Frame:
 
 @dataclass
 class Bottle:
+    start: Optional[Rule]
     variables: Dict[Name, Value]
     match_groups: Dict[Token, Value_List[Token]]
     context_ignore: Set[Token]
@@ -28,6 +29,7 @@ class Bottle:
     rule_list: List[Rule]
 
     def __init__(self):
+        self.start = None
         self.rule_list = list()
         self.rule_assignments = set()
         self.context_ignore = set()

@@ -72,5 +72,4 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
 
         else:
             lraise(SyntaxError(f"Character '{c}' is not a valid LToken / rule component."), char(string[index:]))
-
     return index

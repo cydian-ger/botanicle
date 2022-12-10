@@ -41,6 +41,9 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
             lraise(ValueError(f"Arguments inside the third argument have to be ARGS type. "
                               f"Argument '{arg[1]}' was '{arg[0]}' instead."), arg[2])
 
+    if token_list[0][1] not in SPECIAL_AXIOMS:
+        lraise(SyntaxError(f"Group name has to be a special Axiom character. '{SPECIAL_AXIOMS}'"), token_list[0][2])
+
     group_name = Token(token_list[0][1], token_list[0][2])
 
     # Check if already in group names

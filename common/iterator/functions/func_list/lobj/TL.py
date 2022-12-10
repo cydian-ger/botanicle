@@ -1,4 +1,4 @@
-from compiler.Lglobal.objects.turtle import Turtle
+from common.iterator.objects import Turtle
 
 
 # This class acts as an interface

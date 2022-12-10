@@ -5,7 +5,7 @@ from common.datatypes import Name, Value_List, Expression
 from common.iterator.LMatch import LMatch
 from common.iterator.rule import Rule
 from compiler.lexer.LT import LT
-from compiler.lexer.static import CONTEXT_LEFT, CONTEXT_RIGHT
+from compiler.lexer.static import CONTEXT_LEFT, CONTEXT_RIGHT, START_RULE
 from compiler.Lglobal import lraise
 
 
@@ -138,11 +138,19 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
         right_context = match_list[_index + 1:]
         match_list = match_list[:_index]
 
-    if len(match_list) != 1:
-        lraise(SyntaxError(f"Rule has to have 1 match. Received {len(match_list)} instead."), line_token[2])
+    if len(match_list) != 1 and not name:
+        lraise(SyntaxError(f"Unassigned rules have to have 1 match. Received {len(match_list)} instead."),
+               line_token[2])
+
+    # TODO Partial Rule as extension of Rule base class
+    if len(match_list):  # match_list
+        _match = match_list[0]
+    else:
+        _match = None
+        # lraise(NotImplementedError(f"Partial Rules are not implemented yet"), line_token[2])
 
     rule = Rule(
-        match=match_list[0],
+        match=_match,
         assignment=name,
         left_context=left_context,
         right_context=right_context,
@@ -157,5 +165,8 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
         if variable in bottle.variables.keys():
             lraise(KeyError(f"Match Variable '{variable}' overrides defined variable."), line_token[2])
 
-    bottle.rule_list.append(rule)
+    if name == START_RULE:
+        bottle.start = rule
+    else:
+        bottle.rule_list.append(rule)
     # bottle.rule

@@ -7,7 +7,7 @@ from compiler.lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT,
     ARG_CLOSE
 
 
-@dataclass  # (frozen=True)
+@dataclass
 class Rule:
     # Names NEED to be unique
     match: LMatch  # A
@@ -21,6 +21,9 @@ class Rule:
         self.variables: Value_List[Name] = Value_List()
         self.variables.set_type(Name)
 
+        if not self.match:
+            return
+
         var_list = (self.left_context or []) + [self.match] + (self.right_context or [])
 
         for var in var_list:
@@ -31,7 +34,10 @@ class Rule:
                     self.variables.append(var_name)
 
     def __eq__(self, other: Rule) -> bool:
-        if self.match != other.match:
+        if not self.match and other.match:
+            return False
+
+        elif self.match != other.match:
             return False
 
         if self.left_context != other.left_context:
@@ -56,15 +62,17 @@ class Rule:
                 out_str += " ".join([str(con) for con in self.left_context])
                 out_str += f" {CONTEXT_LEFT} "
 
-        out_str += f"{self.match} "
+        if self.match:
+            out_str += f"{self.match} "
 
         if self.right_context:
             if len(self.right_context) > 0:
                 out_str += f"{CONTEXT_RIGHT} "
                 out_str += " ".join([str(con) for con in self.right_context]) + " "
 
-        out_str += f"{CONDITION_TOKEN} "
         if self.condition is not None:
+            out_str += f"{CONDITION_TOKEN} "
+
             if len(self.condition) == 1:
                 out_str += f"{self.condition[0]} "
             else:

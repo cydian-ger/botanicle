@@ -26,18 +26,18 @@ if __name__ == '__main__':
     # A function is always only called during production and can never turn into a token.
     #
     # MATCH
-    # Function in the match. $function(Argument) -> LMatch
-    # Function in the match Arguments A($function) -> Not accepted because an argument name does not change
+    # [ ] Function in the match. $function(Argument) -> LMatch
+    # [ ] Function in the match Arguments A($function) -> Not accepted because an argument name does not change
     #       after compile so having a function there does not make sense
     #
     # CONDITION
-    # Function instead of expression -> : ("a", $function("a")) -> bool value
-    # Function inside of expression -> : ("a and $function("a")) -> NO IDEA YET
+    # [ ] Function instead of expression -> : ("a", $function("a")) -> bool value
+    # [x] Function inside of expression -> : ("a and $function("a")) -> NO IDEA YET
     #
     # RESULT
-    # Function as result -> -> $function("a") -> LToken / LResult or something
-    # Function as result argument -> A($function(1)) -> floats
-    # Function inside of result expression A("$seed() + 1")
+    # [ ] Function as result -> -> $function("a") -> LToken / LResult or something
+    # [ ] Function as result argument -> A($function(1)) -> floats
+    # [x] Function inside of result expression A("$seed() + 1")
     #
     # MAYBE have statement functions like:
     # define z as "1 + (0.1 * $IT.i())"
