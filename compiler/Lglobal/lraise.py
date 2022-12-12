@@ -1,14 +1,17 @@
-import sys
 from typing import Union, Tuple
 
+from common.env import env_args
 from compiler.Lglobal import Compiler
 from compiler.Lglobal.ltrace import ltrace
-from compiler.lexer.static import LINE_BREAK, ARGV_DEBUG
+from compiler.lexer.static import LINE_BREAK, ARGV_DEBUG, ARGV_TEST
 
 from colorama import Fore, Back, Style
 
 
 def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_info: str = ""):
+    if env_args.__contains__(ARGV_TEST):
+        raise error
+
     if isinstance(err_pos, int):
         err_pos = (err_pos, err_pos + 1)
 
@@ -37,7 +40,7 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_inf
     print(Fore.RED, end="")
     print(f"Line {fault_line_index + 1}: " + repr(error))
 
-    if sys.argv.__contains__(ARGV_DEBUG):
+    if env_args.__contains__(ARGV_DEBUG):
         if debug_info:
             print(debug_info)
         print(ltrace())

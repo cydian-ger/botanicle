@@ -34,11 +34,3 @@ def lex_ltoken(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int
 
     token_list.append((LT.LTOKEN_END, None, char(string[index:])))
     return index
-
-# Change it so that LTOKEN(
-#                       NAME
-#                       ARGS
-#                       ) is the form
-#
-#
-#

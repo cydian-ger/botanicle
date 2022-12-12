@@ -71,5 +71,6 @@ _TOKEN_PRIORITY = [
 # Numbers the statement so statement 0 is now at key 0
 TOKEN_PRIORITY = {x[1]: x[0] for x in enumerate(_TOKEN_PRIORITY)}
 
+ARGV_TEST = "-test"
 ARGV_DEBUG = "-debug"
 ARGV_WARNING = "-warning"

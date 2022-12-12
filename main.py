@@ -1,6 +1,7 @@
 import sys
 
 from common.common_names import COMPILED_FORMAT
+from common.env import env_args
 from compiler.Lcompile_file import compile_file
 from compiler.lcompiler.bottle import Bottle
 import pickle
@@ -20,9 +21,9 @@ if __name__ == '__main__':
     # Have the rule matches allow groups and generics.
 
     # BUD: Bottle of U-- Data
-    sys.argv.append(ARGV_DEBUG)
-    sys.argv.append(ARGV_WARNING)
-    NAME = "test/test"
+    env_args.append(ARGV_DEBUG)
+    env_args.append(ARGV_WARNING)
+    NAME = "testing/test"
     compile_file(NAME)
 
     f = open(NAME + COMPILED_FORMAT, 'rb')

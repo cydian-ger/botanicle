@@ -20,7 +20,7 @@ class Frame:
 
 @dataclass
 class Bottle:
-    start: Optional[Rule]
+    start: Optional[Value_List[Token]]
     variables: Dict[Name, Value]
     match_groups: Dict[Token, Value_List[Token]]
     context_ignore: Set[Token]

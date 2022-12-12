@@ -15,13 +15,12 @@ def lex_function(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[i
         if c == ARG_OPEN or c == SPACE or c == ARG_DELIMITER or c == ARG_CLOSE:
             if func == "":
                 lraise(SyntaxError(f"Function name must not be empty"), char(string[index:]))
-                lraise(SyntaxError(), char(string[index:]))
             token_list.append((LT.FUNCTION, func, char(string[index:])))
             # index -= 1
             break
 
         elif c == LINE_BREAK:
-            lraise(SyntaxError(f"Invalid Character LINE_BREAK in name"), char(string[index:]))
+            lraise(SyntaxError(f"A Function can not be followed a LINE_BREAK"), char(string[index:]))
 
         elif c == FUNCTION_TOKEN:
             if index != 0:

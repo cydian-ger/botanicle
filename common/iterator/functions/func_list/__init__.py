@@ -1,5 +1,9 @@
-__all__ = ['seed', 'test',  # functions
-           'TL']    # objects
+__all__ = ['seed', 'maximum',  # functions
+           "Turtle", "LIterator"]    # objects
 
-from .lfunc import seed, test
-from .lobj import TL
+# Functions
+from .lfunc import seed, maximum
+
+# Objects
+from common.iterator.objects.turtle import Turtle
+from common.iterator.objects.LIterator import LIterator

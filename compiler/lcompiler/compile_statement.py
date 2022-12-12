@@ -1,6 +1,6 @@
 from typing import List, Tuple, Any
 
-from common.LWarning import LWarning
+from compiler.Lglobal import lwarn
 from compiler.lcompiler.bottle import Bottle
 from compiler.lcompiler.statement.define import define
 from compiler.lcompiler.statement.expose import expose
@@ -37,4 +37,4 @@ def compile_statement(token_list: List[Tuple[LT, Any, Tuple[int, int]]], bottle:
             include(token_list, bottle, line_token)
 
         case _:
-            LWarning(f"Keyword '{statement}' not implemented yet.").throw()
+            lwarn(SyntaxWarning(f"Keyword '{statement}' not implemented yet."))

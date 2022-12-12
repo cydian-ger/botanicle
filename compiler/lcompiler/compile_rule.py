@@ -166,7 +166,7 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
             lraise(KeyError(f"Match Variable '{variable}' overrides defined variable."), line_token[2])
 
     if name == START_RULE:
-        bottle.start = rule
+        bottle.start = rule.result  # Put the result here
     else:
         bottle.rule_list.append(rule)
     # bottle.rule

@@ -3,12 +3,10 @@ from common.iterator.objects import Turtle
 
 class LIterator:
     stack: list[Turtle] = list()
+    stack_size: int = lambda: len(LIterator.stack)
     index: int
 
-    def __init__(self):
-        self.stack = list()
-        self.index = 0
-
-    def flush(self):
-        self.stack.clear()
-        self.index = 0
+    @classmethod
+    def flush(cls):
+        cls.stack.clear()
+        cls.index = 0

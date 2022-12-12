@@ -1,8 +1,9 @@
 import sys
+
+from common.env import env_args
 from compiler.lexer.LT import LT
 from compiler.lcompiler.bottle import Bottle
 from typing import List, Tuple, Any
-from common.LWarning import LWarning
 from common.datatypes import Value_List, Token
 from compiler.lexer.static import KW, SPECIAL_AXIOMS, ARGV_WARNING
 from compiler.Lglobal import lraise, lwarn
@@ -12,10 +13,9 @@ def append(ltk, group_values, name, token):
     if ltk not in group_values:
         group_values.append(ltk)
     else:
-        if sys.argv.__contains__(ARGV_WARNING):
-            lwarn(SyntaxWarning(f"Argument '{ltk}'"
-                                f" is included multiple times in '{name}: "
-                                f"({', '.join([str(t_arg[1]) for t_arg in token])})'"))
+        lwarn(SyntaxWarning(f"Argument '{ltk}'"
+                            f" is included multiple times in '{name}: "
+                            f"({', '.join([str(t_arg[1]) for t_arg in token])})'"))
 
 
 def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
@@ -70,13 +70,12 @@ def group(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
             append(Token(argument[1], token_list[2][2]), group_values, group_name, token_list[2][1])
 
     # Warn if the group_values are already in the bottle under a different name
-    if sys.argv.__contains__(ARGV_WARNING):
+    if env_args.__contains__(ARGV_WARNING):
         for name, values in bottle.match_groups.items():
             if values == group_values:
-                LWarning(f"Group '{group_name}: ({', '.join([str(g_value) for g_value in group_values])})"
-                         f"' is already in the bottle: "
-                         f"'{name}: ({', '.join([str(value) for value in values])})'").throw()
-
+                lwarn(Warning(f"Group '{group_name}: ({', '.join([str(g_value) for g_value in group_values])})"
+                              f"' is already in the bottle: "
+                              f"'{name}: ({', '.join([str(value) for value in values])})'"))
     bottle.match_groups[group_name] = group_values
 
     return

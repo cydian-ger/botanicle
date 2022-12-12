@@ -1,3 +1,4 @@
-def test(value1: float) -> float:
-    _max = max(value1, value1)
-    return _max
+def maximum(value1: float, value2: float) -> float:
+    """Returns the bigger of two values"""
+    return max(value1, value2)
+

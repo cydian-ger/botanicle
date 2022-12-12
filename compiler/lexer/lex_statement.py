@@ -24,7 +24,7 @@ def lex_statement(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[
                 if expr[0].isdigit():
                     token_list.append((LT.VALUE, expr, char(string[index:])))
 
-                # If the expression contains path characters like "." and "/"
+                # If the expression_functions contains path characters like "." and "/"
                 elif len([character for character in PATH_CHARS if expr.__contains__(character)]) > 0:
                     token_list.append((LT.PATH, expr, char(string[index:])))
                 # If the first char is not a digit

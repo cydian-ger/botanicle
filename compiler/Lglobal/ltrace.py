@@ -1,6 +1,9 @@
 import inspect
 import os
 
+from common.env import env_args
+from compiler.lexer.static import ARGV_TEST
+
 
 def ltrace(stack_limit: int = -1) -> str:
     if stack_limit > -1:

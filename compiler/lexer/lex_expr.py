@@ -16,7 +16,7 @@ def lex_expr(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
             break
 
         elif c == LINE_BREAK:
-            lraise(SyntaxError("Line break occured before closing of expression"), char(string[index:]))
+            lraise(SyntaxError("Line break occurred before closing of expression_functions"), char(string[index:]))
 
         expr += c
         index += 1

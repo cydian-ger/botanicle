@@ -1,26 +1,27 @@
 import ast
-import sys
-from typing import Optional, Dict, List, Any, Tuple
+from typing import Optional, Dict, List, Any
 from collections import UserString
 
-from common.iterator.functions.function import load_call
+from common.datatypes.expression_functions.evalute_result import evaluate_result
+from common.datatypes.expression_functions.load_function_calls import load_function_calls
+from common.datatypes.expression_functions.load_object_calls import load_object_calls
+from common.datatypes.expression_functions.proxy import Proxy
+from common.env import env_args
 from compiler.lexer.static import ARGV_WARNING, EXPR
 from compiler.Lglobal import lraise, lwarn
-
-
-# This class just gets attributes added to it
-class Shell:
-    pass
 
 
 class Expression(UserString):
     variables: List[str]
     functions: Dict[str, Any]
-    objects: Dict[Tuple[str, str], Any]
+    objects: Dict[str, Any]
+
+    def evaluate(self, eval_vars: Dict[str, Any]):
+        return eval(self.data, None, {**eval_vars, **self.functions, **self.objects})
 
     def __init__(self, string: str, token_index, result_type: Optional[type] = None):
         try:
-            # This checks if an expression is valid
+            # This checks if an expression_functions is valid
             super().__init__(string)
 
             # Remove '"' if necessary
@@ -66,79 +67,40 @@ class Expression(UserString):
             self.variables = list(variables.keys())
 
             # Load all the functions to see if they are valid
-            self.functions = dict()
-            # Store the functions for later calls
-            for function, function_args, node in function_calls:
-                function_call_args = list()
-                # Check all functions
-                for function_arg in function_args:
-                    # If arg is a constant e.g. 1.0
-                    if type(function_arg) == ast.Constant:
-                        function_call_args.append(function_arg)
-                    # If arg is a variable
-                    elif type(function_arg) == ast.Name:
-                        function_call_args.append("1.0")  # Insert a place holder
-                    else:
-                        lraise(NotImplementedError(f"Function argument type: <{type(function_arg).__name__}> is not "
-                                                   f"implemented yet. Sowwy."), token_index)
-
-                self.functions[function] = load_call(function, [ast.literal_eval(fa) for fa in function_call_args],
-                                                     result_type,
-                                                     (token_index[0] + node.col_offset,
-                                                      token_index[0] + node.end_col_offset))
+            self.functions: Dict[str, Any] = load_function_calls(
+                function_calls,
+                result_type,
+                token_index
+            )
 
             # Load all the object attribute calls and check if they are valid
-            self.objects = dict()
-            for obj, attr, node in object_calls:
-                self.objects[(obj, attr)] = load_call(f"{obj}.{attr}", [], result_type,
-                                                      (token_index[0] + node.col_offset,
-                                                       token_index[0] + node.end_col_offset))
+            self.objects: Dict[str, Proxy] = load_object_calls(
+                object_calls,
+                result_type,
+                token_index
+            )
 
-            # Style guide
-            if sys.argv.__contains__(ARGV_WARNING):
+            if env_args.__contains__(ARGV_WARNING):
                 ugly_vars = [variable for variable in variables if variable.lower() != variable]
                 if len(ugly_vars) > 0:
                     lwarn(SyntaxWarning(f"Expression '{string}' contains variables with uppercase letters: "
                                         f"{', '.join(ugly_vars)}"))
 
-            try:
-                if result_type:
-                    try:
-                        # Load test variables
-                        test_vars: Dict[str, Any] = {v: 1 for v in self.variables if v}
+            if result_type:
+                evaluate_result(
+                    string=string,
+                    object_calls=object_calls,
+                    result_type=result_type,
+                    variables=self.variables,
+                    functions=self.functions,
+                    token_index=token_index
+                )
 
-                        # Load shell test objects
-                        _objects: Dict[str, Shell] = dict()
-                        for obj, attr in self.objects.keys():
-                            if obj in _objects:
-                                _objects[obj].__setattr__(attr, 1)
-                            else:
-                                shell = Shell()
-                                shell.__setattr__(attr, 1)
-                                _objects[obj] = shell
-                        test_vars.update(**_objects)
 
-                        # Load test functions
-                        _functions: Dict[str, Any] = dict()
-                        for func in self.functions:
-                            _functions[func] = lambda *x: 1
-
-                        test_vars.update(**_functions)
-
-                        # Check
-                        result = eval(string, None, test_vars)
-
-                    except ZeroDivisionError:  # Assume that if you divide by 0 the result would be 0
-                        # Since the result of division is most likely a float.
-                        result = 1.0
-
-                    if not isinstance(result, result_type):
-                        lraise(TypeError(f"Expression '{string}' does not result in '{result_type.__name__}' type but "
-                                         f"rather '{type(result).__name__}' type."), token_index)
-
-            except SyntaxError as e:
-                lraise(SyntaxError(f"String '{string}' is not a valid expression as it does not result in a {result_type}.")
-                       , token_index)
+        except SyntaxError as e:
+            lraise(SyntaxError(f"String '{string}' is not a valid expression as it does not result in a {result_type}.")
+                   , token_index)
 
         except Exception as e:
+            raise e
             lraise(Exception(f"Failed due too uncaught exception: {repr(e)}"), token_index)

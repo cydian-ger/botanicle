@@ -55,7 +55,7 @@ def lex_condition(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[
         )
 
         if expr[-1] != EXPR and expr[0] != EXPR:
-            lraise(SyntaxError(f"Expression needs to be wrapped in <{EXPR}>."), token_index)
+            lraise(SyntaxError(f"Expression needs to be wrapped using {EXPR}."), token_index)
 
         token_list.append((LT.CON_EXPR, expr, token_index))
 

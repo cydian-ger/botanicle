@@ -31,8 +31,3 @@ def init_production(settings: Dict[str, Any], bottle: Bottle):
             settings[setting] = value
 
     Production.settings = settings
-    Production.lines = Line(
-        bottle.start
-    )
-    Production.turtle = Turtle()
-    Production.LIterator = LIterator()
