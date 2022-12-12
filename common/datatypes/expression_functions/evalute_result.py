@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union, get_origin, get_args
 
 # This class just gets attributes added to it
 from compiler.Lglobal import lraise
@@ -9,7 +9,12 @@ class Shell:
 
 
 def evaluate_result(string: str, object_calls, result_type, variables, functions, token_index):
+
     try:
+        # If the result type is a Union take the highest value
+        if get_origin(result_type) == Union:
+            result_type = get_args(result_type)[0]
+
         # Load testing variables
         test_vars: Dict[str, Any] = {v: result_type() for v in variables if v}
 

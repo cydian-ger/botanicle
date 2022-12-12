@@ -42,9 +42,11 @@ class Expression(UserString):
 
             # Function names and object calls
             try:
+                # Load all calls
                 function_calls = [(node.func.id, node.args, node) for
                                   node in ast.walk(root) if isinstance(node, ast.Call)]
 
+                # Load all objects
                 object_calls = [(node.value.id, node.attr, node)
                                 for node in ast.walk(root) if isinstance(node, ast.Attribute)]
 
@@ -96,11 +98,9 @@ class Expression(UserString):
                     token_index=token_index
                 )
 
-
         except SyntaxError as e:
             lraise(SyntaxError(f"String '{string}' is not a valid expression as it does not result in a {result_type}.")
                    , token_index)
 
         except Exception as e:
-            raise e
             lraise(Exception(f"Failed due too uncaught exception: {repr(e)}"), token_index)

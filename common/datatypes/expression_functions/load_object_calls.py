@@ -24,6 +24,7 @@ def load_object_calls(object_calls: List[Tuple[str, str, Any]], result_type, tok
         if isinstance(object_attr, LambdaType):
             objects[obj].__setattr__(attr, object_attr)
         else:
-            objects[obj].__setattr__(attr, lambda: object_attr)
+            # Put getattr so it does not load it beforehand
+            objects[obj].__setattr__(attr, lambda: getattr(original_object, attr))
 
     return objects
