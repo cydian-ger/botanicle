@@ -16,5 +16,5 @@ def lex_linebreak(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[
         line_breaks += 1
 
     # Minus one because line break is the end for rule and statement
-    token_list.append((LT.NEW_LINE, line_breaks, char(string[index - 1:])))
+    token_list.append((LT.NEW_LINE, line_breaks, char(string[index:])))
     return index

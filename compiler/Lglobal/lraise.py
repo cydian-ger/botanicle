@@ -28,7 +28,7 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_inf
 
     del index
 
-    fault_line_index = len([x for x in line_start_index if x < err_pos[0]])
+    fault_line_index = len([x for x in line_start_index if x <= err_pos[0]])
     fault_line = file_text[fault_line_index]
 
     if fault_line_index > 0:
@@ -44,6 +44,7 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_inf
         if debug_info:
             print(debug_info)
         print(ltrace())
+        print(f"\t<error_index> {err_pos}: '{Compiler.string[err_pos[0]:err_pos[1]]}'")
 
     fault_line_name = f"{fault_line_index + 1}: "
     print("─" * (len(fault_line) + len(fault_line_name)))
