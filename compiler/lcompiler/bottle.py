@@ -2,6 +2,7 @@ from typing import Dict, Set, Optional, List, Tuple, Any
 from common.datatypes import *
 from dataclasses import dataclass
 
+from common.iterator.named_result import NamedResult
 from common.iterator.rule import Rule
 
 
@@ -20,17 +21,18 @@ class Frame:
 
 @dataclass
 class Bottle:
-    start: Optional[Value_List[Token]]
+    start: NamedResult
     variables: Dict[Name, Value]
     match_groups: Dict[Token, Value_List[Token]]
     context_ignore: Set[Token]
     frame: Frame
     rule_assignments: Set[Name]
     rule_list: List[Rule]
+    named_results: List[NamedResult]
 
     def __init__(self):
-        self.start = None
         self.rule_list = list()
+        self.named_results = list()
         self.rule_assignments = set()
         self.context_ignore = set()
         self.variables = dict()

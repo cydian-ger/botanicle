@@ -12,3 +12,6 @@ class Value_List(list):
 
     def set_type(self, _type: type):
         self._type = _type
+
+    def is_type(self, _type: type):
+        return self._type == _type

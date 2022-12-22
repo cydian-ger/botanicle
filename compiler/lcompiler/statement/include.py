@@ -23,7 +23,7 @@ def include(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     if not token_list[2][0] == LT.NAME:
         lraise(ValueError(f"Third argument has to be a token"), token_list[2][2])
 
-    path = Name(token_list[0][1], token_list[0][2])
+    path = Name(token_list[0][1])
     ltoken = Token(token_list[2][1], token_list[2][2])
 
     if bottle.token_already_exists(ltoken):

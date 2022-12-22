@@ -18,7 +18,7 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_inf
     file_text = Compiler.string.split(LINE_BREAK)
     for index, line in enumerate(file_text):
         line: str
-        file_text[index] = line + " "  # Space instead of breakline
+        file_text[index] = line + " "  # Space instead of break line
 
     index = 0
     line_start_index = list()
@@ -44,7 +44,7 @@ def lraise(error: BaseException, err_pos: Union[int, Tuple[int, int]], debug_inf
         if debug_info:
             print(debug_info)
         print(ltrace())
-        print(f"\t<error_index> {err_pos}: '{Compiler.string[err_pos[0]:err_pos[1]]}'")
+        print(f"-debug <error_index> {err_pos}: '{Compiler.string[err_pos[0]:err_pos[1]]}'")
 
     fault_line_name = f"{fault_line_index + 1}: "
     print("─" * (len(fault_line) + len(fault_line_name)))

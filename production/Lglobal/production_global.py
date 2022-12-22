@@ -1,9 +1,7 @@
 import sys
 from typing import Dict, Any
 
-from common.iterator.objects import LIterator, Turtle
 from compiler.lcompiler.bottle import Bottle
-from production.static.lines import Line
 from production.static.static import allowed_settings
 
 Production = sys.modules[__name__]

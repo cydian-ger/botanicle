@@ -1,20 +1,24 @@
 from typing import List, Any, Dict
 
-from common.iterator.functions import func_list as func_list
-from common.iterator.functions.func_util import check_expected_type, func_signature, get_type
+from common.iterator.functions import func_list
+from common.iterator.functions.func_list import lfunctions
+from common.iterator.functions.did_you_mean import closest_match
+from common.iterator.functions.func_util import validate_expected_type, func_signature, get_type
 from compiler.Lglobal import lraise
 from compiler.lexer.static import FUNCTION_TOKEN
 
 
 def _load_function(function_name: str, function_args: List[Any], expected_return_type: type, token_index):
-    if function_name not in [func for func in dir(func_list) if not func.startswith("__")]:
-        lraise(ModuleNotFoundError(f"There is no function named {FUNCTION_TOKEN}{function_name}"),
+    _functions = lfunctions()
+    if function_name not in _functions:
+        lraise(ModuleNotFoundError(f"There is no function named <{function_name}>."
+                                   f"{closest_match(function_name, _functions)} "),
                token_index)
 
     func = getattr(func_list, function_name)
 
     # Check if the function return type is correct
-    check_expected_type(expected_return_type, get_type(func), function_name, token_index)
+    validate_expected_type(expected_return_type, get_type(func), function_name, token_index)
 
     # This seems to be always ordered
     types: Dict[Any, type] = func.__annotations__

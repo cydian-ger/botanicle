@@ -1,10 +1,23 @@
 from typing import List, Any
+
+from common.iterator.functions.did_you_mean import closest_match
 from common.iterator.functions.load_function import _load_function
 from common.iterator.functions.load_object import _load_object
+from compiler.Lglobal import lraise
+from compiler.lexer.static import FUNCTION_ATTRIBUTE_TOKEN
 
 
 def load_call(function_name: str, function_args: List[Any], expected_return_type: type, token_index):
+    # Adjust for misalignment
+    token_index = (token_index[0] + 2, token_index[1] + 2)
+
     if function_name[0].islower():
+        # Check if the function has an attribute token
+        if function_name.__contains__(FUNCTION_ATTRIBUTE_TOKEN):
+            lraise(SyntaxError(f"A function can not have an attribute token '{FUNCTION_ATTRIBUTE_TOKEN}' in "
+                               f"<{function_name}>. Either capitalize it to make it an object call or remove"
+                               f"the attribute token."),
+                   token_index)
         # Returns a function class
         return _load_function(function_name, function_args, expected_return_type, token_index)
     else:

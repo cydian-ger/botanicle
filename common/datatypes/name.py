@@ -2,5 +2,5 @@ from collections import UserString
 
 
 class Name(UserString):
-    def __init__(self, string: str, token_index):
+    def __init__(self, string: str):
         super().__init__(string)

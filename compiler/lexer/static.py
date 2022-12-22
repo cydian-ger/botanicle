@@ -17,7 +17,7 @@ CONDITION_TOKEN = ":"
 RESULT_TOKEN = "→"
 ASSIGNMENT_TOKEN = "."  # Assign a name to a rule
 FUNCTION_TOKEN = "$"
-FUNCTION_EXTRA_TOKEN = "."
+FUNCTION_ATTRIBUTE_TOKEN = "."
 REFERENCE_TOKEN = "@"
 
 BASE_AXIOMS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -25,15 +25,22 @@ CONTEXT_HINTS = "01234567889"
 SPECIAL_AXIOMS = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ"  # All of these are greek letters
 # Limitation: these can only be used when
 # a) referencing an include file
-# b) for a catch group (that one only has rule wide scope)
+# b) for a catch group (that one only has file wide scope)
 
-__ = "αβγδεζηθικλμνξοπρσςτυφχψω"  # These are used for naming rules and lines and such
+__ = "αβγδεζηθικλμνξοπρσςτυφχψω"
 
 PRODUCTION_RULES = "[]{}+-"
 GENERIC = "*"
+MATCH_RETRIEVAL = "?"
 
 # All tokens that can be used in rules A, *, [, ]
 VALID_RULE_LTOKENS = BASE_AXIOMS + PRODUCTION_RULES + GENERIC + SPECIAL_AXIOMS + CONTEXT_HINTS
+
+# For the .start
+VALID_START_TOKENS = BASE_AXIOMS + PRODUCTION_RULES
+
+# Valid tokens for a result
+VALID_RESULT_TOKENS = BASE_AXIOMS + PRODUCTION_RULES + MATCH_RETRIEVAL
 
 # Valid characters that denote the start of a rule
 VALID_RULE_START = VALID_RULE_LTOKENS + CONDITION_TOKEN + ASSIGNMENT_TOKEN + FUNCTION_TOKEN

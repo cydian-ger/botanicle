@@ -40,7 +40,6 @@ def _token_compactor(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]
 
         else:
             if token != LT.NEW_LINE:
-
                 if isinstance(value, dict):
                     out_list.append((token, value, (char_index + 1, char_index + 1)))
                 else:

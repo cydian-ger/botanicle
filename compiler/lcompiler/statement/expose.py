@@ -22,7 +22,7 @@ def expose(token_list: List[Tuple[LT, Any, Tuple[int, int]]],
     value_list.set_type(Name)
 
     for argument in token_list[0][1]:
-        name = Name(argument[1], token_list[0][2])
+        name = Name(argument[1])
         value_list.append(name)
 
     if bottle.frame.exposed_variables is not None:

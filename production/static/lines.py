@@ -1,5 +1,7 @@
 from typing import List, Any
 
+from common.datatypes.LResult import LResult
+
 
 class Line:
     history: List[List[Any]]
@@ -7,10 +9,11 @@ class Line:
     successor: List[Any]
 
     @classmethod
-    def new(cls, predecessor: List[Any]):
+    def new(cls, predecessor: List[LResult]):
         # Load the start line as the predecessor line
         cls.history = list()
-        cls.predecessor = predecessor
+        # Add the name and the variables
+        cls.predecessor = [[lres.name] + lres.load(dict()) for lres in predecessor]
         cls.successor = list()
 
     # https://en.wikipedia.org/wiki/Carriage_return#:~:text=A%20carriage%20return%2C%20sometimes%20known,of%20a%20line%20of%20text.
@@ -19,3 +22,13 @@ class Line:
         cls.history.append(cls.predecessor)
         cls.predecessor = cls.successor
         cls.successor = list()
+
+    @classmethod
+    def print(cls):
+        out_str = ""
+        for tkn in cls.predecessor:
+            out_str += tkn[0]
+            if len(tkn) > 1:
+                out_str += "(" + ", ".join(map(str, tkn[1:])) + ")"
+            out_str += " "
+        return out_str

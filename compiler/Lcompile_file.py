@@ -1,4 +1,4 @@
-import pickle
+import cloudpickle
 from common.common_names import EDITOR_FORMAT, COMPILED_FORMAT
 from compiler.Lglobal import init_compiler
 from compiler.lcompiler.l_compiler import l_compile
@@ -17,11 +17,13 @@ def compile_file(name: str):
 
     # Compact tokens
     _compacted_tokens = token_compactor(tk)
+    # from pprint import pprint
+    # pprint(_compacted_tokens)
 
     # Bake the tokens into a bottle
     bottle = l_compile(_compacted_tokens)
 
     f = open(name + COMPILED_FORMAT, 'wb')
-    pickle.dump(bottle, f)
+    cloudpickle.dump(bottle, f)
     f.close()
     return

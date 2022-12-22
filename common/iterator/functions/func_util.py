@@ -25,7 +25,7 @@ def get_type(func: type(__func)) -> type:
     return _type
 
 
-def check_expected_type(expected_return_type, func_type, function_name, token_index):
+def validate_expected_type(expected_return_type, func_type, function_name, token_index):
     # Check if the function return type is inside the expected return types
     if expected_return_type is not None:
         # If the args are packed in Union

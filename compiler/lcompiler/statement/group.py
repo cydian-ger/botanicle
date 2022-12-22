@@ -1,5 +1,3 @@
-import sys
-
 from common.env import env_args
 from compiler.lexer.LT import LT
 from compiler.lcompiler.bottle import Bottle

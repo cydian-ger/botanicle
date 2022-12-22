@@ -22,10 +22,9 @@ class Expression(UserString):
     def __init__(self, string: str, token_index, result_type: Optional[type] = None):
         try:
             # This checks if an expression_functions is valid
-            super().__init__(string)
-
-            # Remove '"' if necessary
             string = string.strip(EXPR)
+            super().__init__(string)
+            # Remove '"' if necessary
 
             root = None
             try:

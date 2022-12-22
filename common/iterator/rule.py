@@ -1,8 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
-from common.datatypes import Value_List, Name
-from common.iterator.LMatch import LMatch
+from common.datatypes import Value_List, Name, Expression
+from common.datatypes.LMatch import LMatch
+from common.datatypes.LResult import LResult
 from compiler.lexer.static import ASSIGNMENT_TOKEN, CONTEXT_LEFT, CONTEXT_RIGHT, CONDITION_TOKEN, RESULT_TOKEN, ARG_OPEN, \
     ARG_CLOSE
 
@@ -14,8 +15,8 @@ class Rule:
     assignment: Optional[str]  # Name used by other rules to call it e.g. ".rule1" would be "'rule1'"
     left_context: Optional[Value_List[LMatch]]  # A(a) B(b) C(c) > SELF
     right_context: Optional[Value_List[LMatch]]  # SELF < A(a) B(b) C(c)
-    condition: Optional[str]  # Condition :a == b =>
-    result: Optional[Value_List[LMatch]]
+    condition: Optional[Value_List[Expression]]  # Condition :a == b =>
+    result: Optional[Value_List[LResult]]
 
     def __post_init__(self):
         self.variables: Value_List[Name] = Value_List()

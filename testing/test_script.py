@@ -6,6 +6,7 @@ from testing.lexer import *
 
 
 if __name__ == '__main__':
+    announce()
     init_compiler(" ")
     env_args += [ARGV_DEBUG, ARGV_TEST, ARGV_WARNING]
     unittest.main()
