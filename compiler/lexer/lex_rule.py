@@ -54,7 +54,6 @@ def lex_rule(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, 
             if result_token:
                 lraise(SyntaxError("Result token can not appear more than once in a rule."), char(string[index:]))
             result_token = True
-
             token_list.append((LT.RESULT, None, char(string[index:])))
             index += 1
 

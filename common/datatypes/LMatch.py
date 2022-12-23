@@ -3,7 +3,7 @@ from typing import Union, Tuple, List
 # from dataclasses import dataclass
 from common.datatypes import Name, Value_List, Token
 from common.datatypes.lgroup import Group
-from compiler.lexer.static import ARG_OPEN, ARG_CLOSE
+from compiler.lexer.static import ARG_OPEN, ARG_CLOSE, GENERIC
 
 
 class LMatch:
@@ -15,7 +15,6 @@ class LMatch:
         self.name = name
         self.values = values
 
-    def __post_init__(self):
         if type(self.name) == Group:
             self._is_group = True
 
@@ -32,8 +31,9 @@ class LMatch:
 
     def match(self, instance: List):
         if self._is_group:
-            if instance[0] not in self.name:
-                return False
+            if self.name.name != GENERIC:
+                if instance[0] not in self.name:
+                    return False
 
         else:
             if instance[0] != self.name:
@@ -45,7 +45,9 @@ class LMatch:
         return True
 
     def map(self, variables: List[float]):
-        return {k: v for k, v in zip(self.values, variables)}
+        # Map the string data of the names onto the given values
+        # This method assumes the length of the variables is equal to that of the values
+        return {k.data: v for k, v in zip(self.values, variables)}
 
     def __repr__(self):
         # no vars

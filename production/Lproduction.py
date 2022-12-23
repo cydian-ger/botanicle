@@ -3,19 +3,16 @@ from common.common_names import COMPILED_FORMAT
 from common.iterator.objects import LIterator
 from compiler.lcompiler.bottle import Bottle
 from production.Lglobal.match_token import match_token
-from production.Lglobal.production_global import init_production
+from production.Lglobal.production_global import init_production, Production
 from production.static.lines import Line
 
 
-def production(name: str):
+def production(name: str, production_settings: dict = None):
     try:
         f = open(name + COMPILED_FORMAT, 'rb')
         bottle: Bottle = pickle.load(f)
-        init_production({"max_iter": 100}, bottle)
+        init_production(production_settings or {}, bottle)
         f.close()
-
-        # MAX ITERATION
-        MAX_ITER = 3
 
         # Create lines
         Line.new(bottle.start.result)
@@ -28,22 +25,18 @@ def production(name: str):
             for index, ltoken in enumerate(Line.predecessor):
                 LIterator.index = index
 
-                # if LIterator.index < len(Line.predecessor):
-                # ltoken = Line.predecessor[LIterator.index]
-
-                # Do the LToken and rule thing
-                # Make a Ltoken to instance bake method
-                # Make the match work, together with context and all
+                # Put the token into the rules
                 match_token(ltoken, bottle)
 
             LIterator.counter += 1
-            if LIterator.counter >= MAX_ITER:
+            if LIterator.counter >= Production.settings["max_iter"]:
                 break
 
             Line.carriage_return()
 
+        Line.stash()
         # Final out line
-        print(Line.print())
+        # print(Line.print())
 
     except KeyboardInterrupt:
         # save it

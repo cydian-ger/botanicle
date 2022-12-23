@@ -4,6 +4,7 @@ from common.datatypes.lgroup import Group
 from compiler.Lglobal import lraise
 from compiler.lcompiler.bottle import Bottle
 from compiler.lexer.LT import LT
+from compiler.lexer.static import GENERIC
 
 
 def compile_lmatch(name: str, args, bottle: Bottle, token_index):
@@ -12,6 +13,9 @@ def compile_lmatch(name: str, args, bottle: Bottle, token_index):
     # If it is a group use the group instead
     if name in bottle.match_groups.keys():
         token_name = Group(token_name, bottle.match_groups[token_name])
+
+    elif name == GENERIC:
+        token_name = Group(token_name, [])
 
     token_args = Value_List()
     token_args.set_type(Name)

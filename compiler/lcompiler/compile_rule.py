@@ -109,7 +109,8 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
             # Compile and pack all LTokens embedded in the result
             for _, result_content, result_index in content:
                 result_token = compile_result_token(
-                    result_content[0][1], result_content[1][1], bottle,
+                    result_content[0][1],
+                    result_content[1][1], bottle,
                     {"result_type": Union[float, int]}, token_index)
 
                 result.append(result_token)

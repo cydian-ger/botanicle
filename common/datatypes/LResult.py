@@ -11,17 +11,14 @@ def _wrap(string):
 
 
 class LResult:
-    name: Union[Token, Group]
+    name: Token
     values: Value_List[Expression]
-    _is_group: bool = False
+    _is_group: bool
 
-    def __init__(self, name: Union[Token, Group], values: Value_List[Expression]):
+    def __init__(self, name: Token, values: Value_List[Expression], is_group: bool):
         self.name = name
         self.values = values
-
-    def __post_init__(self):
-        if type(self.name) == Group:
-            self._is_group = True
+        self._is_group = is_group
 
     def is_group(self):
         return self._is_group

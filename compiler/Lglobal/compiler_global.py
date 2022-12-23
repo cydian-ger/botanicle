@@ -12,11 +12,13 @@ def init_compiler(string: str):
     if Compiler.string is not None:
         raise RuntimeError("Variable already defined")
 
-    if env_args.__contains__(ARGV_TEST):
-        return
-
     Compiler.string = string
     Compiler.err_padding = 2
+
+
+def reset_compiler():
+    Compiler.string = None
+    Compiler.err_padding = None
 
 
 if env_args.__contains__(ARGV_TEST):

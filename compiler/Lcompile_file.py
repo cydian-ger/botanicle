@@ -1,19 +1,32 @@
 import cloudpickle
 from common.common_names import EDITOR_FORMAT, COMPILED_FORMAT
-from compiler.Lglobal import init_compiler
+from common.env import env_args
+from compiler.Lglobal import init_compiler, Compiler
 from compiler.lcompiler.l_compiler import l_compile
 from compiler.lexer.lex import lex
+from compiler.lexer.static import ARGV_LINT
 from compiler.lexer.token_compactor import token_compactor
+from compiler.lint.lint import lint
 
 
 def compile_file(name: str):
-    file = open(name + EDITOR_FORMAT, encoding="utf-8")
+    ENCODING = "utf-8"
+    file = open(name + EDITOR_FORMAT, encoding=ENCODING)
     # Read the file and init the compiler
-    test_string = file.read()
-    init_compiler(test_string)
+
+    string = file.read()
+
+    # Lint the file.
+    if env_args.__contains__(ARGV_LINT):
+        file.close()
+        file = open(name + EDITOR_FORMAT, "w", encoding=ENCODING)
+        file.write(lint(string))
+    file.close()
+
+    init_compiler(string)
 
     # Lex the file
-    tk = lex(test_string)
+    tk = lex(string)
 
     # Compact tokens
     _compacted_tokens = token_compactor(tk)

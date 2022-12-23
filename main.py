@@ -5,7 +5,7 @@ from compiler.lcompiler.bottle import Bottle
 import cloudpickle
 from pprint import pprint
 
-from compiler.lexer.static import ARGV_DEBUG, ARGV_WARNING
+from compiler.lexer.static import ARGV_DEBUG, ARGV_WARNING, ARGV_LINT
 from production.Lproduction import production
 
 if __name__ == '__main__':
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     # Say no to clutter-ware
 
     # BUD: Bottle of U-- Data
+    env_args.append(ARGV_LINT)
     env_args.append(ARGV_DEBUG)
     env_args.append(ARGV_WARNING)
     NAME = "testing/test"

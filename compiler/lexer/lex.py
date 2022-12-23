@@ -4,14 +4,8 @@ from compiler.lexer.lex_statement import lex_statement
 from compiler.lexer.lex_comment import lex_comment
 from compiler.lexer.lex_linebreak import lex_linebreak
 from compiler.lexer.lex_rule import lex_rule
-from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START
+from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START, COMMENT
 from compiler.Lglobal import char
-
-
-def _line_info(string: str, index: int, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]):
-    line_number = string[:index].count("\n") + 1
-    line = string.split("\n")[line_number - 1]
-    token_list.append((LT.INFO, {"line_number": line_number, "line_text": line}, char(string[index:])))
 
 
 def lex(string: str):
@@ -30,7 +24,7 @@ def lex(string: str):
             # _line_info(string, index, token_list)
             index += lex_statement(string[index:], token_list)
 
-        elif c == "#":
+        elif c == COMMENT:
             index += lex_comment(string[index:], token_list)
 
         elif c in VALID_RULE_START:

@@ -29,3 +29,6 @@ def init_production(settings: Dict[str, Any], bottle: Bottle):
             settings[setting] = value
 
     Production.settings = settings
+
+def reset_production():
+    Production.settings = None

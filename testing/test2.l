@@ -9,7 +9,7 @@ ignore (0, 1, 2, 3, 4)
 .start → A(1.0)B(1.0)
 .name → A(1.9)
 
-.test A(a) < Γ > A                      : "a == b"               → A("a", "a / b + a + seed(1.0, 1.0, 1)")B(1 + b)
+.test A(a) < Γ > A                      : "a == b"              → A("a", "a / b + a + seed(1.0, 1.0, 1)")B(1 + b)
 Z(z1) < Y(y) > Z(z2) A                  : "z == zz"             → X(1.0)
 L(a)                                    : ("a == b", "b == c")  → L(a + 1.0)
 # $prev((b), (a)) < A(a)                  :                       → $weighted((@test, _), (1, 2))

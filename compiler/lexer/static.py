@@ -5,6 +5,7 @@ EXPR = '"'
 ARG_OPEN = "("
 ARG_CLOSE = ")"
 ARG_DELIMITER = ","  # For A(1, b)
+COMMENT = "#"
 SPACE = " "
 PATH_CHARS = "/."  # For paths and files
 EMPTY_ARGUMENT = "_"
@@ -39,14 +40,8 @@ VALID_RULE_LTOKENS = BASE_AXIOMS + PRODUCTION_RULES + GENERIC + SPECIAL_AXIOMS +
 # For the .start
 VALID_START_TOKENS = BASE_AXIOMS + PRODUCTION_RULES
 
-# Valid tokens for a result
-VALID_RESULT_TOKENS = BASE_AXIOMS + PRODUCTION_RULES + MATCH_RETRIEVAL
-
 # Valid characters that denote the start of a rule
 VALID_RULE_START = VALID_RULE_LTOKENS + CONDITION_TOKEN + ASSIGNMENT_TOKEN + FUNCTION_TOKEN
-
-# All tokens that can be used everywhere
-VALID_INSTANCE_LTOKENS = BASE_AXIOMS + PRODUCTION_RULES + SPECIAL_AXIOMS
 
 VALID_STATEMENT_CHARACTERS = "abcdefghijklmnopqrstuvwxy"
 
@@ -79,5 +74,6 @@ _TOKEN_PRIORITY = [
 TOKEN_PRIORITY = {x[1]: x[0] for x in enumerate(_TOKEN_PRIORITY)}
 
 ARGV_TEST = "-test"
+ARGV_LINT = "-lint"
 ARGV_DEBUG = "-debug"
 ARGV_WARNING = "-warning"

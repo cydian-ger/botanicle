@@ -1,7 +1,7 @@
 from typing import List, Tuple, Any, Union
 from compiler.lexer.LT import LT
 from compiler.lexer.lex_args import lex_args
-from compiler.lexer.static import VALID_RULE_LTOKENS, ARG_OPEN
+from compiler.lexer.static import VALID_RULE_LTOKENS, ARG_OPEN, GENERIC
 from compiler.Lglobal import char
 
 

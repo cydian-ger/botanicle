@@ -1,8 +1,9 @@
-__all__ = ["TestLexerException", "TestLexer", "TestCompiler", "announce"]
+__all__ = ["TestLexerException", "TestLexer", "TestCompiler", "TestProduction", "announce"]
 
 from .lexer_errors import TestLexerException
 from .lexer import TestLexer
 from .compiler import TestCompiler
+from .production import TestProduction
 
 
 def announce():
