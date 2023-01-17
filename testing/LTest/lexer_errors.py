@@ -109,7 +109,7 @@ class TestLexerException(unittest.TestCase):
             lex(test_string)
 
     def test_rule_invalid_char(self):
-        test_string = "A ?"
+        test_string = "A !"
         with self.assertRaises(SyntaxError):
             lex(test_string)
 

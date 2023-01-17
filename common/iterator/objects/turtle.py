@@ -22,6 +22,15 @@ class Turtle:
         [self.__setattr__(attr, Turtle.__getattribute__(Turtle, attr))
          for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
 
+    @classmethod
+    def flush(cls):
+        Turtle.x = 0.0
+        Turtle.y = 0.0
+        Turtle.z = 0.0
+        Turtle.yaw = 0.0
+        Turtle.roll = 0.0
+        Turtle.pitch = 0.0
+
     # self: Optional[Turtle]
     def _position(self=None) -> (float, float, float):
         # Returns the position of the turtle or the turtle instance

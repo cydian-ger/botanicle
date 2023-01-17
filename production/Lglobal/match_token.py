@@ -18,13 +18,13 @@ def match_token(ltoken: List, bottle: Bottle):
         variables: Dict[str, Any] = {k: v for k, v in zip(rule.match.values, ltoken[1:])}
 
         if rule.right_context:
-            res, _vars = match_context(rule, bottle, False)
+            res, _vars = match_context(rule, bottle, ltoken, False)
             if not res:
                 continue
             variables.update(**_vars)
 
         if rule.left_context:
-            res, _vars = match_context(rule, bottle, True)
+            res, _vars = match_context(rule, bottle, ltoken, True)
             if not res:
                 continue
             variables.update(**_vars)
@@ -40,7 +40,7 @@ def match_token(ltoken: List, bottle: Bottle):
                 continue
 
         for result in rule.result:
-            if result.is_group():
+            if result.is_retrieval:
                 # The fetched result must be the one that matched
                 token = ltoken[0]
             else:

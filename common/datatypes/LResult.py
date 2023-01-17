@@ -13,15 +13,12 @@ def _wrap(string):
 class LResult:
     name: Token
     values: Value_List[Expression]
-    _is_group: bool
+    is_retrieval: bool
 
-    def __init__(self, name: Token, values: Value_List[Expression], is_group: bool):
+    def __init__(self, name: Token, values: Value_List[Expression], is_retrieval):
         self.name = name
         self.values = values
-        self._is_group = is_group
-
-    def is_group(self):
-        return self._is_group
+        self.is_retrieval = is_retrieval
 
     def __repr__(self):
         # no vars

@@ -23,7 +23,7 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
                          LT.FUNCTION, LT.FUNCTION_ARGS}:
             lraise(SyntaxError(f"{token} is not an allowed Token in a Rule"), token_index)
 
-        # The lexer already checks if the assignment is at the start of a token
+        # The LTest already checks if the assignment is at the start of a token
         if token is LT.ASSIGNMENT:
             name = Name(content)
 
@@ -78,7 +78,7 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
 
         elif token == LT.CONTEXT_TOKEN:
             # Insert placeholder LMatches
-            match_list.append(LMatch(content, Value_List()))
+            match_list.append(LMatch(content, Value_List(), False))
 
         elif token == LT.FUNCTION:
             # Use same function as above
@@ -116,8 +116,9 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
                 result.append(result_token)
         index += 1
 
+    # TODO change this to not use LMatches anymore
     # Split left context
-    left_con = LMatch(CONTEXT_LEFT, Value_List())
+    left_con = LMatch(CONTEXT_LEFT, Value_List(), False)
     if match_list.__contains__(left_con):
         _index = match_list.index(left_con)
         left_context = match_list[:_index]
@@ -127,7 +128,7 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
             lraise(SyntaxError(f"Left context needs at least 1 match to be valid"), line_token[2])
 
     # Split right context
-    right_con = LMatch(CONTEXT_RIGHT, Value_List())
+    right_con = LMatch(CONTEXT_RIGHT, Value_List(), False)
     if match_list.__contains__(right_con):
         _index = match_list.index(right_con)
         right_context = match_list[_index + 1:]

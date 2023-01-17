@@ -9,11 +9,13 @@ from compiler.lexer.static import ARG_OPEN, ARG_CLOSE, GENERIC
 class LMatch:
     name: Union[Token, Group]
     values: Value_List[Name]
+    is_retrieval: bool
     _is_group: bool = False
 
-    def __init__(self, name: Union[Token, Group], values: Value_List[Name]):
+    def __init__(self, name: Union[Token, Group], values: Value_List[Name], is_retrieval):
         self.name = name
         self.values = values
+        self.is_retrieval = is_retrieval
 
         if type(self.name) == Group:
             self._is_group = True
@@ -30,7 +32,11 @@ class LMatch:
         return True
 
     def match(self, instance: List):
-        if self._is_group:
+        if self.is_retrieval:
+            # This expects that the match is checked beforehand
+            pass
+
+        elif self._is_group:
             if self.name.name != GENERIC:
                 if instance[0] not in self.name:
                     return False

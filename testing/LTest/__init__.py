@@ -7,4 +7,4 @@ from .production import TestProduction
 
 
 def announce():
-    print(f"Testing: <{', '.join([_ for _ in __all__ if _ != 'announce'])}>")
+    print(f"Testing: <{', '.join([_[4:] for _ in __all__ if _ != 'announce'])}>")

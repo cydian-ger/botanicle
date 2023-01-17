@@ -1,5 +1,4 @@
 from typing import List, Any
-
 from common.datatypes.LResult import LResult
 
 
@@ -34,6 +33,5 @@ class Line:
         for tkn in cls.successor:
             out_str += tkn[0]
             if len(tkn) > 1:
-                out_str += "(" + ", ".join(map(str, tkn[1:])) + ")"
-            out_str += " "
+                out_str += "(" + ",".join(map(str, tkn[1:])) + ")"
         return out_str

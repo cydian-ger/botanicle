@@ -1,6 +1,7 @@
 import sys
 from typing import Dict, Any
 
+from common.iterator.objects import LIterator, Turtle
 from compiler.lcompiler.bottle import Bottle
 from production.static.static import allowed_settings
 
@@ -30,5 +31,8 @@ def init_production(settings: Dict[str, Any], bottle: Bottle):
 
     Production.settings = settings
 
+
 def reset_production():
     Production.settings = None
+    LIterator.flush()
+    Turtle.flush()

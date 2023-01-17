@@ -4,14 +4,19 @@ from common.datatypes.lgroup import Group
 from compiler.Lglobal import lraise
 from compiler.lcompiler.bottle import Bottle
 from compiler.lexer.LT import LT
-from compiler.lexer.static import GENERIC
+from compiler.lexer.static import GENERIC, MATCH_RETRIEVAL
 
 
 def compile_lmatch(name: str, args, bottle: Bottle, token_index):
     token_name = Token(name, token_index)
 
     # If it is a group use the group instead
-    if name in bottle.match_groups.keys():
+
+    is_retrieval = False
+    if name is MATCH_RETRIEVAL:
+        is_retrieval = True
+
+    elif name in bottle.match_groups.keys():
         token_name = Group(token_name, bottle.match_groups[token_name])
 
     elif name == GENERIC:
@@ -31,4 +36,4 @@ def compile_lmatch(name: str, args, bottle: Bottle, token_index):
         else:
             lraise(SyntaxError(f"Invalid Argument Type for Token: {arg_t}."), arg_i)
 
-    return LMatch(token_name, token_args)
+    return LMatch(token_name, token_args, is_retrieval)

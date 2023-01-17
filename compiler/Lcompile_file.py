@@ -1,7 +1,7 @@
 import cloudpickle
 from common.common_names import EDITOR_FORMAT, COMPILED_FORMAT
 from common.env import env_args
-from compiler.Lglobal import init_compiler, Compiler
+from compiler.Lglobal import init_compiler
 from compiler.lcompiler.l_compiler import l_compile
 from compiler.lexer.lex import lex
 from compiler.lexer.static import ARGV_LINT
@@ -18,9 +18,10 @@ def compile_file(name: str):
 
     # Lint the file.
     if env_args.__contains__(ARGV_LINT):
+        string = lint(string)
         file.close()
         file = open(name + EDITOR_FORMAT, "w", encoding=ENCODING)
-        file.write(lint(string))
+        file.write(string)
     file.close()
 
     init_compiler(string)
@@ -39,4 +40,4 @@ def compile_file(name: str):
     f = open(name + COMPILED_FORMAT, 'wb')
     cloudpickle.dump(bottle, f)
     f.close()
-    return
+    return bottle

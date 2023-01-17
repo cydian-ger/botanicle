@@ -6,7 +6,7 @@ from compiler.lcompiler.bottle import Bottle
 from production.static.lines import Line
 
 
-def match_context(rule: Rule, bottle: Bottle, left) -> Tuple[bool, dict]:
+def match_context(rule: Rule, bottle: Bottle, ltoken, left: bool) -> Tuple[bool, dict]:
     variables: dict = dict()
 
     if left:
@@ -19,7 +19,7 @@ def match_context(rule: Rule, bottle: Bottle, left) -> Tuple[bool, dict]:
     # Load the current index
     con_iter = LIterator.index
 
-    for con in context:
+    for context in context:
         con_iter += direction
 
         if con_iter < 0 or con_iter >= len(Line.predecessor):
@@ -37,10 +37,14 @@ def match_context(rule: Rule, bottle: Bottle, left) -> Tuple[bool, dict]:
             token = Line.predecessor[con_iter]
 
         # Check if the context matches the token
-        if not con.match(token):
+        if context.is_retrieval:
+            if token != ltoken[0]:
+                return False, {}
+
+        if not context.match(token):
             return False, {}
 
         # Load the variables into the variable map
-        variables.update(**con.map(token[1:]))
+        variables.update(**context.map(token[1:]))
 
     return True, variables

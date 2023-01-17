@@ -1,4 +1,4 @@
-import pickle
+import cloudpickle
 from common.common_names import COMPILED_FORMAT
 from common.iterator.objects import LIterator
 from compiler.lcompiler.bottle import Bottle
@@ -10,7 +10,7 @@ from production.static.lines import Line
 def production(name: str, production_settings: dict = None):
     try:
         f = open(name + COMPILED_FORMAT, 'rb')
-        bottle: Bottle = pickle.load(f)
+        bottle: Bottle = cloudpickle.load(f)
         init_production(production_settings or {}, bottle)
         f.close()
 
@@ -29,12 +29,15 @@ def production(name: str, production_settings: dict = None):
                 match_token(ltoken, bottle)
 
             LIterator.counter += 1
-            if LIterator.counter >= Production.settings["max_iter"]:
+            if LIterator.counter > Production.settings["max_iter"]:
                 break
 
+            # print(f"{Line.print()}", end="")
+            # input(" >")
             Line.carriage_return()
 
         Line.stash()
+
         # Final out line
         # print(Line.print())
 

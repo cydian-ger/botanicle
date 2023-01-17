@@ -4,8 +4,8 @@ from compiler.lexer.lex_statement import lex_statement
 from compiler.lexer.lex_comment import lex_comment
 from compiler.lexer.lex_linebreak import lex_linebreak
 from compiler.lexer.lex_rule import lex_rule
-from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START, COMMENT
-from compiler.Lglobal import char
+from compiler.lexer.static import LINE_BREAK, VALID_STATEMENT_CHARACTERS, VALID_RULE_START, COMMENT, SPACE
+from compiler.Lglobal import char, lraise
 
 
 def lex(string: str):
@@ -32,8 +32,9 @@ def lex(string: str):
             # _line_info(string, index, token_list)
             index += lex_rule(string[index:], token_list)
 
-        else:
+        elif c == SPACE:
             index += 1
+
+        else:
+            lraise(SyntaxError(f"Character {c} is not a valid way to start a line"), char(string[index:]))
     return token_list
-
-

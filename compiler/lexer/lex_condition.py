@@ -12,8 +12,6 @@ def _strip_expr(expr: str) -> str:
 
 def lex_condition(string: str, token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]]) -> int:
     token_list.append((LT.CONDITION, None, char(string)))
-    # TODO
-    # Allow multiple arguments
     expr = ""
     index = 0
 
