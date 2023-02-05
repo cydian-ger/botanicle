@@ -36,7 +36,7 @@ class TestProduction(unittest.TestCase):
         TestProduction.currentFile = None
 
     def test_generic(self):
-        load("./test_dir/test_generic/", {"max_iter": 2})
+        load("./test_dir/test_generic/", {"max_iter": 3})
         self.assertEqual(Line.print(), "ABBBBBBBBA")
 
     def test_context(self):
@@ -48,5 +48,13 @@ class TestProduction(unittest.TestCase):
         self.assertEqual(Line.print(), "A(2.0)Z(1.0)X(1.0)Z(1.0)B(2.0)")
 
     def test_context_retrieval(self):
-        load("./test_dir/test_context_retrieval/", {"max_iter": 2})
+        load("./test_dir/test_context_retrieval/", {"max_iter": 1})
         self.assertEqual(Line.print(), "A(1.0)A(1.0)A(1.0)")
+
+    def test_common_algae(self):
+        load("./test_dir/test_common/algae/", {"max_iter": 4})
+        self.assertEqual(Line.print(), "ABAABABA")
+
+    def test_common_fractal_tree(self):
+        load("./test_dir/test_common/fractal_tree/", {"max_iter": 2})
+        self.assertEqual(Line.print(), "AA[A[B]B]A[B]B")

@@ -29,7 +29,7 @@ def production(name: str, production_settings: dict = None):
                 match_token(ltoken, bottle)
 
             LIterator.counter += 1
-            if LIterator.counter > Production.settings["max_iter"]:
+            if LIterator.counter >= Production.settings["max_iter"]:
                 break
 
             # print(f"{Line.print()}", end="")
