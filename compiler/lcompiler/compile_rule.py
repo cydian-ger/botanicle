@@ -40,6 +40,7 @@ def compile_rule(token_list: List[Tuple[LT, Any, Union[int, Tuple[int, int]]]], 
 
     # If there are no result tokens in the rule raise Error
     if len([_ for _ in token_list if _[0] == LT.RESULT]) == 0:
+        print(token_list)
         lraise(SyntaxError(f"Rule has to contain a result"), line_token[2])
 
     # Check if there are a valid amount of context tokens and if they are arranged correctly.
