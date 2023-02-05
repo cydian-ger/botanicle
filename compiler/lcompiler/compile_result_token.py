@@ -21,9 +21,6 @@ def compile_result_token(name, args, bottle: Bottle, kwargs: Dict, token_index):
     if name is MATCH_RETRIEVAL:
         is_retrieval = True
 
-    # TODO change it to be like in match token
-    # Check generics in compile_rule after
-
     for arg_type, arg_value, arg_index in args:
         if arg_type == LT.ARG or arg_type == LT.EXPR:
             token_args.append(Expression(arg_value, arg_index, **kwargs))
