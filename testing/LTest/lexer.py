@@ -4,9 +4,8 @@ from compiler.lexer.LT import LT
 from compiler.lexer.lex import lex
 
 
-# All Lexer Errors
+# Test if the Lexer returns the correct tokens
 class TestLexer(unittest.TestCase):
-    # TODO
     def test_ltoken(self):
         name, arg = ("A", "b")
         test_string = f"{name}({arg})"

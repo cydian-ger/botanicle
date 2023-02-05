@@ -58,9 +58,6 @@ class Expression(UserString):
             # Load all Objects
             object_names = [name for name, attr, node in object_calls]
 
-            # TODO
-            # Check if variable is defined twice
-
             # Load a dummy value into every variable and leave out every function call and object
             variables: Dict[str, int] = {v: 1 for v in var_list if not (v in function_names or v in object_names)}
 
